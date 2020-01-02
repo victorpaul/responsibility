@@ -1,4 +1,4 @@
-.ideagit
+.idea
 *.iml
 .gradle
 /local.properties
