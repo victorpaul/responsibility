@@ -1,6 +1,5 @@
 package com.sukinsan.responsibility
 
-import android.content.Context
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +10,8 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.work.*
 import com.sukinsan.responsibility.entities.TaskEntity
 import com.sukinsan.responsibility.enums.RemindRuleEnum
+import com.sukinsan.responsibility.services.newWorkerManagerService
+import com.sukinsan.responsibility.utils.newStorageUtils
 import com.sukinsan.responsibility.workmanagers.ReminderWorker
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -36,34 +37,24 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        val storageUt = newStorageUtils(this)
+        val workerSv = newWorkerManagerService(this, storageUt)
+
         val task = TaskEntity(
-            "task id", RemindRuleEnum.DAILY,
+            "task id", 1, RemindRuleEnum.HORLY,
             "Drink water", Date(), null, null
         )
-
-        // todo, SaveUtils to save data
-        val sharedPref = getSharedPreferences("PairTasksIdJson", Context.MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putString(task.id, task.toJson())
-            commit()
-        }
+        val task2 = TaskEntity(
+            "task id2", 2, RemindRuleEnum.HORLY,
+            "Beber agua", Date(), null, null
+        )
 
         // todo, workmanagerService
-//        val remindHelloOnce = OneTimeWorkRequestBuilder<ReminderWorker>()
-//            .setInputData(workDataOf(Pair("taskId", task.id)))
-//            .setInitialDelay(3,TimeUnit.SECONDS)
-//            .build()
-//        WorkManager.getInstance(this).enqueue(remindHelloOnce)
+//
 
-        val cronJob =
-            PeriodicWorkRequestBuilder<ReminderWorker>(1, TimeUnit.HOURS)
-                .setInputData(workDataOf(Pair("taskId", task.id)))
-                .setInitialDelay(5,TimeUnit.SECONDS)
-                .build()
-
-        WorkManager.getInstance(this).enqueue(cronJob)
-
-
+        workerSv.runRecurring(task)
+        workerSv.runRecurring(task2)
 
     }
 }
