@@ -13,13 +13,17 @@ fun newReminderService(ctx: Context, storageUtils: StorageUtils): WorkerReminder
 
 interface WorkerReminderService {
 
+    fun getWorkManager(): WorkManager
+
     fun runRecurring(task: TaskEntity): Operation
 
 }
 
-class WorkerManagerServiceImpl(ctx: Context, val storageUtils: StorageUtils) : WorkerReminderService {
+class WorkerManagerServiceImpl(val ctx: Context, val storageUtils: StorageUtils) : WorkerReminderService {
 
-    val workManager = WorkManager.getInstance(ctx)
+    override fun getWorkManager(): WorkManager {
+        return WorkManager.getInstance(ctx)
+    }
 
     override fun runRecurring(task: TaskEntity): Operation {
         val cronJob =
@@ -30,7 +34,7 @@ class WorkerManagerServiceImpl(ctx: Context, val storageUtils: StorageUtils) : W
             task.workerManagerId = cronJob.id.toString()
             storageUtils.save(task)
         }
-        return workManager.enqueueUniquePeriodicWork(task.id, ExistingPeriodicWorkPolicy.REPLACE, cronJob)
+        return getWorkManager().enqueueUniquePeriodicWork(task.id, ExistingPeriodicWorkPolicy.REPLACE, cronJob)
     }
 
 }
