@@ -1,10 +1,14 @@
 package com.sukinsan.responsibility.enums
 
 enum class RemindRuleEnum {
-    HORLY,
+    HOURLY,
     DAILY,
     WEEKLY,
     MONTHLY,
     YEARLY,
-    TODO
+    TODO;
+
+    fun getNotificationId(): Int {
+        return values().indexOf(this)
+    }
 }

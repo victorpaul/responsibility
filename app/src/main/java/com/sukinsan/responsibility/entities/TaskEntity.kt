@@ -10,7 +10,6 @@ fun taskFromJson(json: String?): TaskEntity {
 
 class TaskEntity(
     val id: String,
-    val notificationId: Int,
     val remindRule: RemindRuleEnum,
     val description: String,
     val createdAt: Date,
@@ -21,6 +20,10 @@ class TaskEntity(
 
     init {
 
+    }
+
+    fun getNotoficationId() : Int{
+        return remindRule.getNotificationId()
     }
 
     fun toJson(): String {
@@ -41,7 +44,6 @@ class TaskEntity(
         other as TaskEntity
 
         if (id != other.id) return false
-        if (notificationId != other.notificationId) return false
         if (remindRule != other.remindRule) return false
         if (description != other.description) return false
         if (createdAt != other.createdAt) return false
@@ -54,7 +56,6 @@ class TaskEntity(
 
     override fun hashCode(): Int {
         var result = id.hashCode()
-        result = 31 * result + notificationId
         result = 31 * result + remindRule.hashCode()
         result = 31 * result + description.hashCode()
         result = 31 * result + createdAt.hashCode()
@@ -65,7 +66,7 @@ class TaskEntity(
     }
 
     override fun toString(): String {
-        return "TaskEntity(id='$id', notificationId=$notificationId, remindRule=$remindRule, description='$description', createdAt=$createdAt, doneAt=$doneAt, failedAt=$failedAt, workerManagerId=$workerManagerId)"
+        return "TaskEntity(id='$id', remindRule=$remindRule, description='$description', createdAt=$createdAt, doneAt=$doneAt, failedAt=$failedAt, workerManagerId=$workerManagerId)"
     }
 
 

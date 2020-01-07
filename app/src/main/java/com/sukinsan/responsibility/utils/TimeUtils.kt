@@ -19,20 +19,27 @@ interface TimeUtils {
 
     fun friendlyDateTime(): String
 
+    fun friendlyDate(): String
+
+    fun friendlyTime(): String
+
     fun getDate(): Date
 }
 
 class TimeUtilsImpl(val calendar: Calendar) : TimeUtils {
 
-    val PATTERN_TIME = "MMM d, HH:mm"
+    val PATTERN_FRIENDLY_TIME = "HH:mm"
+    val PATTERN_FRIENDLY_DATE = "MMM d"
+    val PATTERN_FRIENDLY_DATE_TIME = "MMM d, HH:mm"
     val PATTERN_ISO8601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
 
-    val dfISO8601: SimpleDateFormat
-    val dfTime: SimpleDateFormat
+    val dfISO8601: SimpleDateFormat by lazy { SimpleDateFormat(PATTERN_ISO8601, Locale.getDefault()) }
+    val dfDateTime: SimpleDateFormat by lazy { SimpleDateFormat(PATTERN_FRIENDLY_DATE_TIME, Locale.getDefault()) }
+    val dfDate: SimpleDateFormat by lazy { SimpleDateFormat(PATTERN_FRIENDLY_DATE, Locale.getDefault()) }
+    val dfTime: SimpleDateFormat by lazy { SimpleDateFormat(PATTERN_FRIENDLY_TIME, Locale.getDefault()) }
 
     init {
-        dfISO8601 = SimpleDateFormat(PATTERN_ISO8601, Locale.getDefault())
-        dfTime = SimpleDateFormat(PATTERN_TIME, Locale.getDefault())
+
     }
 
     override fun getCurrentHour(): Int {
@@ -40,6 +47,14 @@ class TimeUtilsImpl(val calendar: Calendar) : TimeUtils {
     }
 
     override fun friendlyDateTime(): String {
+        return dfDateTime.format(calendar.time)
+    }
+
+    override fun friendlyDate(): String {
+        return dfDate.format(calendar.time)
+    }
+
+    override fun friendlyTime(): String {
         return dfTime.format(calendar.time)
     }
 

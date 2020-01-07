@@ -1,5 +1,6 @@
 package com.sukinsan.responsibility.services
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -8,22 +9,24 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.sukinsan.responsibility.R
 import com.sukinsan.responsibility.entities.TaskEntity
+import com.sukinsan.responsibility.utils.StorageUtils
 import com.sukinsan.responsibility.utils.TimeUtils
+import kotlin.concurrent.thread
 
-fun newNotificationService(ctx: Context, tu: TimeUtils): NotificationService {
-    return NotificationServiceImpl(ctx, tu)
+fun newNotificationService(ctx: Context, tu: TimeUtils, storageUtils: StorageUtils): NotificationService {
+    return NotificationServiceImpl(ctx, tu, storageUtils)
 }
 
 interface NotificationService {
 
     fun registerChannel(): Boolean
 
-    fun showNotification(title: String, body: String, notId: Int): Boolean
+    fun showNotification(title: String, body: String, notId: Int, collapsedText: String?): Boolean
 
-    fun showNotification(task: TaskEntity): Boolean
+    fun showNotification(task: TaskEntity)
 }
 
-class NotificationServiceImpl(val ctx: Context, val tu: TimeUtils) : NotificationService {
+class NotificationServiceImpl(val ctx: Context, val tu: TimeUtils, val storageUtils: StorageUtils) : NotificationService {
 
     override fun registerChannel(): Boolean {
         // Create the NotificationChannel, but only on API 26+ because
@@ -44,12 +47,18 @@ class NotificationServiceImpl(val ctx: Context, val tu: TimeUtils) : Notificatio
         return false
     }
 
-    override fun showNotification(title: String, body: String, notId: Int): Boolean {
+    override fun showNotification(title: String, body: String, notId: Int, collapsedText: String?): Boolean {
         val builder = NotificationCompat.Builder(ctx, "reminderID")
             .setSmallIcon(R.drawable.ic_notifications_black_24dp)
-            .setContentTitle(tu.friendlyDateTime())
-            .setContentText(title)
+            .setContentTitle(title)
+            .setContentText(body)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+
+        if (collapsedText != null) {
+            builder.setStyle(
+                NotificationCompat.BigTextStyle().bigText(collapsedText)
+            )
+        }
 
         with(NotificationManagerCompat.from(ctx)) {
             // notificationId is a unique int for each notification that you must define
@@ -59,12 +68,22 @@ class NotificationServiceImpl(val ctx: Context, val tu: TimeUtils) : Notificatio
         return true
     }
 
-    override fun showNotification(task: TaskEntity): Boolean {
-        return showNotification(
-            tu.friendlyDateTime(),
-            "${task.description}\n${task.workerManagerId}",
-            task.notificationId
-        )
+    override fun showNotification(task: TaskEntity) {
+        storageUtils.lock {
+
+            val lastMessage = storageUtils.getLastMessage(task)
+            storageUtils.saveLastMessage(
+                task,
+                arrayOf("${tu.friendlyTime()} ${task.description}", lastMessage).filterNotNull().joinToString(".\r\n")
+            )
+
+            showNotification(
+                tu.friendlyDate(),
+                task.description,
+                task.getNotoficationId(),
+                arrayOf("${task.description}", lastMessage).filterNotNull().joinToString(".\r\n")
+            )
+        }
     }
 
 }
