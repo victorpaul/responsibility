@@ -15,7 +15,7 @@ interface StorageUtils {
 
     fun save(task: TaskEntity): Boolean
 
-    fun getById(taskId: String): TaskEntity
+    fun getById(taskId: String): TaskEntity?
 
     fun saveLastMessage(task: TaskEntity, lastMessage: String): Boolean
 
@@ -24,36 +24,39 @@ interface StorageUtils {
 
 class SharedPrefUtilsImpl(ctx: Context, val timeUtils: TimeUtils) : StorageUtils {
 
-    val sharedPref: SharedPreferences
+    val sharedPrefTasks: SharedPreferences
+    val sharedPrefTemps: SharedPreferences
 
     init {
-        sharedPref = ctx.getSharedPreferences("PairTasksIdJson", Context.MODE_PRIVATE)
+        sharedPrefTasks = ctx.getSharedPreferences("Tasks", Context.MODE_PRIVATE)
+        sharedPrefTemps = ctx.getSharedPreferences("Temps", Context.MODE_PRIVATE)
     }
 
     override fun lock(body: () -> Unit) {
         synchronized(true) {
-            body()
+            return body()
         }
     }
 
     override fun save(task: TaskEntity): Boolean {
-        val editor = sharedPref.edit()
+        val editor = sharedPrefTasks.edit()
         editor.putString(task.id, task.toJson())
         return editor.commit()
     }
 
-    override fun getById(taskId: String): TaskEntity {
-        return taskFromJson(sharedPref.getString(taskId, null))
+    override fun getById(taskId: String): TaskEntity? {
+        val json = sharedPrefTasks.getString(taskId, null)
+        return taskFromJson(json)
     }
 
     override fun saveLastMessage(task: TaskEntity, lastMessage: String): Boolean {
-        val editor = sharedPref.edit()
+        val editor = sharedPrefTemps.edit()
         editor.putString("${task.getNotoficationId()}-${timeUtils.friendlyDate()}", lastMessage)
         return editor.commit()
     }
 
     override fun getLastMessage(task: TaskEntity): String? {
-        return sharedPref.getString("${task.getNotoficationId()}-${timeUtils.friendlyDate()}", null)
+        return sharedPrefTasks.getString("${task.getNotoficationId()}-${timeUtils.friendlyDate()}", null)
     }
 
 }

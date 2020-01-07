@@ -30,7 +30,7 @@ class TaskEntityTest {
         )
 
         Assert.assertEquals(
-            TaskEntity("task id",  RemindRuleEnum.DAILY, "Drink water", date, null, null),
+            TaskEntity("task id", RemindRuleEnum.DAILY, "Drink water", date, null, null),
             task
         )
     }
@@ -38,7 +38,7 @@ class TaskEntityTest {
     @Test
     fun success_json_serialization_deserialization() {
         val task = TaskEntity(
-            "task id",  RemindRuleEnum.DAILY, "Drink water",
+            "task id", RemindRuleEnum.DAILY, "Drink water",
             newTU(3000, 10, 10, 21, 10, 0).getDate(),
             newTU(3000, 10, 10, 22, 25, 0).getDate(),
             newTU(3000, 10, 10, 23, 30, 0).getDate(), "UUID-UUID"
@@ -58,9 +58,16 @@ class TaskEntityTest {
     }
 
     @Test
+    fun fail_json_serialization_deserialization() {
+        Assert.assertEquals(null, taskFromJson(null))
+        Assert.assertEquals(null, taskFromJson(""))
+        Assert.assertEquals(null, taskFromJson("invalid json"))
+    }
+
+    @Test
     fun success_get_uuid() {
         val task = TaskEntity(
-            "task id",  RemindRuleEnum.DAILY, "Drink water",
+            "task id", RemindRuleEnum.DAILY, "Drink water",
             newTU(3000, 10, 10, 21, 10, 0).getDate()
         )
         task.workerManagerId = "4f3f1826-6b7e-4fd2-a4c2-b488fea647fd"
@@ -74,7 +81,7 @@ class TaskEntityTest {
     @Test
     fun fail_to_get_uuid() {
         val task = TaskEntity(
-            "task id",  RemindRuleEnum.DAILY, "Drink water",
+            "task id", RemindRuleEnum.DAILY, "Drink water",
             newTU(3000, 10, 10, 21, 10, 0).getDate()
         )
 

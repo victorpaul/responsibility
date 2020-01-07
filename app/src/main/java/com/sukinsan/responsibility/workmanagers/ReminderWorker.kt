@@ -21,9 +21,12 @@ class ReminderWorker(appContext: Context, workerParams: WorkerParameters) :
 
         val task = storage.getById(taskId as String)
 
-        if (newTU().getCurrentHour() >= 7 && newTU().getCurrentHour() <= 23) {
+        if (task != null && newTU().getCurrentHour() >= 7 && newTU().getCurrentHour() <= 23) {
             notifySv.registerChannel()
-            notifySv.showNotification(task)
+            task?.let {
+                notifySv.showNotification(it)
+            }
+
         } else {
             Log.i(LOG_TAG, "Sleep well ${newTU().getCurrentHour()}")
         }

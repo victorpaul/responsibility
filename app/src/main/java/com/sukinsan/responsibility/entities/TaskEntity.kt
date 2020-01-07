@@ -1,11 +1,19 @@
 package com.sukinsan.responsibility.entities
 
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.sukinsan.responsibility.enums.RemindRuleEnum
 import java.util.*
 
-fun taskFromJson(json: String?): TaskEntity {
-    return Gson().fromJson(json, TaskEntity::class.java)
+fun taskFromJson(json: String?): TaskEntity? {
+    if (json == null || json.trim().isEmpty()) {
+        return null
+    }
+    try {
+        return Gson().fromJson(json, TaskEntity::class.java)
+    } catch (e: JsonSyntaxException) {
+        return null
+    }
 }
 
 class TaskEntity(
@@ -22,7 +30,7 @@ class TaskEntity(
 
     }
 
-    fun getNotoficationId() : Int{
+    fun getNotoficationId(): Int {
         return remindRule.getNotificationId()
     }
 

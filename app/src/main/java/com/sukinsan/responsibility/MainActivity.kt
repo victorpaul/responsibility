@@ -42,11 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         val task = TaskEntity(
             "task id", RemindRuleEnum.HOURLY,
-            "Drink water", Date(), null, null
-        )
-        val task2 = TaskEntity(
-            "task id2", RemindRuleEnum.HOURLY,
-            "Beber agua", Date(), null, null
+            "Drink more water", Date(), null, null
         )
         val task3 = TaskEntity(
             "task id3", RemindRuleEnum.HOURLY,
@@ -58,7 +54,6 @@ class MainActivity : AppCompatActivity() {
         )
 
         workerSv.runRecurring(task)
-        workerSv.runRecurring(task2)
         workerSv.runRecurring(task3)
         workerSv.runRecurring(task4)
 

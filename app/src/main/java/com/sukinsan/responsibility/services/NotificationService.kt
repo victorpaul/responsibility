@@ -23,7 +23,7 @@ interface NotificationService {
 
     fun showNotification(title: String, body: String, notId: Int, collapsedText: String?): Boolean
 
-    fun showNotification(task: TaskEntity)
+    fun showNotification(task: TaskEntity): Boolean
 }
 
 class NotificationServiceImpl(val ctx: Context, val tu: TimeUtils, val storageUtils: StorageUtils) : NotificationService {
@@ -68,7 +68,8 @@ class NotificationServiceImpl(val ctx: Context, val tu: TimeUtils, val storageUt
         return true
     }
 
-    override fun showNotification(task: TaskEntity) {
+    override fun showNotification(task: TaskEntity): Boolean {
+        var r = false
         storageUtils.lock {
 
             val lastMessage = storageUtils.getLastMessage(task)
@@ -77,13 +78,14 @@ class NotificationServiceImpl(val ctx: Context, val tu: TimeUtils, val storageUt
                 arrayOf("${tu.friendlyTime()} ${task.description}", lastMessage).filterNotNull().joinToString(".\r\n")
             )
 
-            showNotification(
+            r = showNotification(
                 tu.friendlyDate(),
                 task.description,
                 task.getNotoficationId(),
                 arrayOf("${task.description}", lastMessage).filterNotNull().joinToString(".\r\n")
             )
         }
+        return r
     }
 
 }
