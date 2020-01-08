@@ -53,9 +53,11 @@ class MainActivity : AppCompatActivity() {
             "Do sport", Date(), null, null
         )
 
-        workerSv.runRecurring(task)
-        workerSv.runRecurring(task3)
-        workerSv.runRecurring(task4)
+        workerSv.runRecurringWorker(task)
+        workerSv.runRecurringWorker(task3)
+        workerSv.runRecurringWorker(task4)
+
+        workerSv.runRecurringAlarm()
 
     }
 }

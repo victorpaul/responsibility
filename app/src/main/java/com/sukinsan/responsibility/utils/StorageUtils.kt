@@ -56,7 +56,7 @@ class SharedPrefUtilsImpl(ctx: Context, val timeUtils: TimeUtils) : StorageUtils
     }
 
     override fun getLastMessage(task: TaskEntity): String? {
-        return sharedPrefTasks.getString("${task.getNotoficationId()}-${timeUtils.friendlyDate()}", null)
+        return sharedPrefTemps.getString("${task.getNotoficationId()}-${timeUtils.friendlyDate()}", null)
     }
 
 }
