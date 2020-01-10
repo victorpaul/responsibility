@@ -27,8 +27,20 @@ class AlarmReceiver : BroadcastReceiver() {
 
         if (newTU().getCurrentHour() in 7..23) {
             notifySv.registerChannel()
-            task?.let {
-                notifySv.showNotification(it)
+            storage.updateDB { se ->
+                val lastMessage = se.getLastMessage(tu, task)
+                se.saveLastMessage(
+                    tu,
+                    task,
+                    arrayOf("${tu.friendlyTime()} ${task.description}", lastMessage).filterNotNull().joinToString(".\r\n")
+                )
+                notifySv.showNotification(
+                    tu.friendlyDate(),
+                    task.description,
+                    task.getNotoficationId(),
+                    arrayOf("${task.description}", lastMessage).filterNotNull().joinToString(".\r\n")
+                )
+                return@updateDB true
             }
         }
         Log.i(LOG_TAG, "onReceive")

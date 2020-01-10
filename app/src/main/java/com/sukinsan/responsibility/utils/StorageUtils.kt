@@ -2,8 +2,12 @@ package com.sukinsan.responsibility.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import com.sukinsan.responsibility.entities.StorageEntity
 import com.sukinsan.responsibility.entities.TaskEntity
 import com.sukinsan.responsibility.entities.taskFromJson
+import java.lang.Exception
 
 fun newStorageUtils(ctx: Context, timeUtils: TimeUtils): StorageUtils {
     return SharedPrefUtilsImpl(ctx, timeUtils)
@@ -20,12 +24,18 @@ interface StorageUtils {
     fun saveLastMessage(task: TaskEntity, lastMessage: String): Boolean
 
     fun getLastMessage(task: TaskEntity): String?
+
+    fun getDB(): StorageEntity
+
+    fun updateDB(save: (storage: StorageEntity) -> Boolean)
 }
 
 class SharedPrefUtilsImpl(ctx: Context, val timeUtils: TimeUtils) : StorageUtils {
 
     val sharedPrefTasks: SharedPreferences
     val sharedPrefTemps: SharedPreferences
+    val storageKey = "StorageEntity"
+    val gson = Gson()
 
     init {
         sharedPrefTasks = ctx.getSharedPreferences("Tasks", Context.MODE_PRIVATE)
@@ -57,6 +67,29 @@ class SharedPrefUtilsImpl(ctx: Context, val timeUtils: TimeUtils) : StorageUtils
 
     override fun getLastMessage(task: TaskEntity): String? {
         return sharedPrefTemps.getString("${task.getNotoficationId()}-${timeUtils.friendlyDate()}", null)
+    }
+
+    override fun getDB(): StorageEntity {
+        val json = sharedPrefTasks.getString(storageKey, null)
+        try {
+            return Gson().fromJson(json, StorageEntity::class.java)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return StorageEntity()
+    }
+
+    override fun updateDB(save: (storage: StorageEntity) -> Boolean) {
+        var r = false
+        lock {
+            val db = getDB()
+            if (save(db)) {
+                val editor = sharedPrefTasks.edit()
+                editor.putString(storageKey, gson.toJson(db))
+                r = editor.commit()
+            }
+        }
+//        return r;
     }
 
 }

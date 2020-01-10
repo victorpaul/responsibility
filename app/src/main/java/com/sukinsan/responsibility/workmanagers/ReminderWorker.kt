@@ -19,12 +19,25 @@ class ReminderWorker(appContext: Context, workerParams: WorkerParameters) :
         val storage = newStorageUtils(applicationContext, tu)
         val notifySv = newNotificationService(applicationContext, tu, storage)
 
-        val task = storage.getById(taskId as String)
-
-        if (task != null && newTU().getCurrentHour() >= 7 && newTU().getCurrentHour() <= 23) {
+        if (newTU().getCurrentHour() in 0..23) {
             notifySv.registerChannel()
-            task?.let {
-                notifySv.showNotification(it)
+            storage.updateDB { se ->
+                val task = se.getById(taskId as String)
+                if (task != null) {
+                    val lastMessage = se.getLastMessage(tu, task)
+                    se.saveLastMessage(
+                        tu,
+                        task,
+                        arrayOf("${tu.friendlyTime()} ${task.description}", lastMessage).filterNotNull().joinToString(".\r\n")
+                    )
+                    notifySv.showNotification(
+                        tu.friendlyDate(),
+                        task.description,
+                        task.getNotoficationId(),
+                        arrayOf("${task.description}", lastMessage).filterNotNull().joinToString(".\r\n")
+                    )
+                }
+                return@updateDB true
             }
 
         } else {
