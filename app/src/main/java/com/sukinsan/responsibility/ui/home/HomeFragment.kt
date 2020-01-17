@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sukinsan.responsibility.R
 import com.sukinsan.responsibility.adapters.TaskAdapter
+import com.sukinsan.responsibility.entities.TaskContainerEntity
 import com.sukinsan.responsibility.utils.newStorageUtils
 import com.sukinsan.responsibility.utils.newTU
 
@@ -28,10 +28,12 @@ class HomeFragment : Fragment() {
     ): View? {
 
         val tu = newTU()
-        val storageUt = context?.let { newStorageUtils(it, tu) }
-        storageUt.getDB().tasks
 
-        viewAdapter = TaskAdapter(ArrayList())
+        context?.let {
+            val storageUt = newStorageUtils(it, tu)
+            val taskContainers = storageUt.getDB().tasks.map { t -> TaskContainerEntity(t.value) }
+            viewAdapter = TaskAdapter(taskContainers)
+        }
 
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)

@@ -3,7 +3,6 @@ package com.sukinsan.responsibility.utils
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
 import com.sukinsan.responsibility.entities.StorageEntity
 import com.sukinsan.responsibility.entities.TaskEntity
 import com.sukinsan.responsibility.entities.taskFromJson
