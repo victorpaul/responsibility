@@ -26,7 +26,7 @@ interface StorageUtils {
 
     fun getDB(): StorageEntity
 
-    fun updateDB(save: (storage: StorageEntity) -> Boolean)
+    fun lockDB(save: (storage: StorageEntity) -> Boolean) //todo move StorageEntity logic here, and remove StorageEntity completely
 }
 
 class SharedPrefUtilsImpl(ctx: Context, val timeUtils: TimeUtils) : StorageUtils {
@@ -78,7 +78,7 @@ class SharedPrefUtilsImpl(ctx: Context, val timeUtils: TimeUtils) : StorageUtils
         return StorageEntity()
     }
 
-    override fun updateDB(save: (storage: StorageEntity) -> Boolean) {
+    override fun lockDB(save: (storage: StorageEntity) -> Boolean) {
         var r = false
         lock {
             val db = getDB()

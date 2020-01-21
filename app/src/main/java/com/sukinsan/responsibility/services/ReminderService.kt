@@ -44,10 +44,10 @@ class ReminderServiceImpl(val ctx: Context, val storageUtils: StorageUtils) : Re
 
             .build()
 
-        storageUtils.updateDB { se ->
+        storageUtils.lockDB { se ->
             task.workerManagerId = cronJob.id.toString()
             se.save(task)
-            return@updateDB true
+            return@lockDB true
         }
 
         return getWorkManager().enqueueUniquePeriodicWork(task.id, ExistingPeriodicWorkPolicy.REPLACE, cronJob)

@@ -19,7 +19,7 @@ class StorageEntity {
         return null
     }
 
-    fun saveLastMessage(tu: TimeUtils, task: TaskEntity, lastMessage: String): Boolean {
+    fun saveLastMessage(tu: TimeUtils, task: TaskEntity, lastMessage: String): Boolean { // todo, move tu task out
         keyValue.put("${task.getNotoficationId()}-${tu.friendlyDate()}", lastMessage)
         return true
     }

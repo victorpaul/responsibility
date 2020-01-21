@@ -6,6 +6,7 @@ import android.content.Intent
 import android.util.Log
 import com.sukinsan.responsibility.entities.TaskEntity
 import com.sukinsan.responsibility.enums.RemindRuleEnum
+import com.sukinsan.responsibility.services.newLogicFlowService
 import com.sukinsan.responsibility.services.newNotificationService
 import com.sukinsan.responsibility.utils.newStorageUtils
 import com.sukinsan.responsibility.utils.newTU
@@ -20,27 +21,19 @@ class AlarmReceiver : BroadcastReceiver() {
         val storage = newStorageUtils(context, tu)
         val notifySv = newNotificationService(context, tu, storage)
 
+        val flowService = newLogicFlowService(tu, notifySv)
+
         val task = TaskEntity(
             "task id5", RemindRuleEnum.DAILY,
             "Age is just a number", Date(), null, null
         )
 
-        if (newTU().getCurrentHour() in 7..23) {
+        if (flowService.isItNotificationWindow()) {
             notifySv.registerChannel()
-            storage.updateDB { se ->
-                val lastMessage = se.getLastMessage(tu, task)
-                se.saveLastMessage(
-                    tu,
-                    task,
-                    arrayOf("${tu.friendlyTime()} ${task.description}", lastMessage).filterNotNull().joinToString(".\r\n")
-                )
-                notifySv.showNotification(
-                    tu.friendlyDate(),
-                    task.description,
-                    task.getNotoficationId(),
-                    arrayOf("${task.description}", lastMessage).filterNotNull().joinToString(".\r\n")
-                )
-                return@updateDB true
+            storage.lockDB { db ->
+                val r = flowService.remindUserAboutTask(task, db)
+                Log.i(LOG_TAG, r.message)
+                return@lockDB r.success
             }
         }
         Log.i(LOG_TAG, "onReceive")
