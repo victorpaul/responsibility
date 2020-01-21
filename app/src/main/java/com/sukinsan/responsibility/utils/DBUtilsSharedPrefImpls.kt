@@ -1,30 +1,36 @@
-package com.sukinsan.responsibility.entities
+package com.sukinsan.responsibility.utils
 
-import com.sukinsan.responsibility.utils.TimeUtils
+import com.google.gson.annotations.Expose
+import com.sukinsan.responsibility.entities.TaskEntity
 
-class StorageEntity {
-
+class DBUtilsSharedPrefImpls(val tu: TimeUtils) : DBUtils {
+    @Expose
     val tasks: MutableMap<String, TaskEntity> = HashMap()
+    @Expose
     val keyValue: MutableMap<String, String> = HashMap()
 
-    fun save(task: TaskEntity): Boolean {
+    override fun save(task: TaskEntity): Boolean {
         tasks.put(task.id, task)
         return false
     }
 
-    fun getById(taskId: String): TaskEntity? {
+    override fun getTasksAll(): MutableMap<String, TaskEntity> {
+        return tasks
+    }
+
+    override fun getTaskById(taskId: String): TaskEntity? {
         if (tasks.containsKey(taskId)) {
             return tasks.get(taskId)
         }
         return null
     }
 
-    fun saveLastMessage(tu: TimeUtils, task: TaskEntity, lastMessage: String): Boolean { // todo, move tu task out
+    override fun saveLastMessage(task: TaskEntity, lastMessage: String): Boolean {
         keyValue.put("${task.getNotoficationId()}-${tu.friendlyDate()}", lastMessage)
         return true
     }
 
-    fun getLastMessage(tu: TimeUtils, task: TaskEntity): String? {
+    override fun getLastMessage(task: TaskEntity): String? {
         val key = "${task.getNotoficationId()}-${tu.friendlyDate()}"
         if (keyValue.containsKey(key)) {
             return keyValue.get(key)

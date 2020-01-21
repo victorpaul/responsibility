@@ -1,6 +1,5 @@
 package com.sukinsan.responsibility.services
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -8,13 +7,11 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.sukinsan.responsibility.R
-import com.sukinsan.responsibility.entities.TaskEntity
-import com.sukinsan.responsibility.utils.StorageUtils
+import com.sukinsan.responsibility.providers.DBProvider
 import com.sukinsan.responsibility.utils.TimeUtils
-import kotlin.concurrent.thread
 
-fun newNotificationService(ctx: Context, tu: TimeUtils, storageUtils: StorageUtils): NotificationService {
-    return NotificationServiceImpl(ctx, tu, storageUtils)
+fun newNotificationService(ctx: Context, tu: TimeUtils, dbProvider: DBProvider): NotificationService {
+    return NotificationServiceImpl(ctx, tu, dbProvider)
 }
 
 interface NotificationService {
@@ -25,7 +22,7 @@ interface NotificationService {
 
 }
 
-class NotificationServiceImpl(val ctx: Context, val tu: TimeUtils, val storageUtils: StorageUtils) : NotificationService {
+class NotificationServiceImpl(val ctx: Context, val tu: TimeUtils, val dbProvider: DBProvider) : NotificationService {
 
     override fun registerChannel(): Boolean {
         // Create the NotificationChannel, but only on API 26+ because

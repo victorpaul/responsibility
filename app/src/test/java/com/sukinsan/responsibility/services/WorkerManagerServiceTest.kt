@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.*
 import com.sukinsan.responsibility.entities.TaskEntity
 import com.sukinsan.responsibility.enums.RemindRuleEnum
-import com.sukinsan.responsibility.utils.StorageUtils
+import com.sukinsan.responsibility.providers.DBProvider
 import com.sukinsan.responsibility.utils.newTU
 import org.junit.After
 import org.junit.Test
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 class WorkerManagerServiceTest {
 
     val ctx = Mockito.mock(Context::class.java)
-    val su = Mockito.mock(StorageUtils::class.java)
+    val su = Mockito.mock(DBProvider::class.java)
 
     @After
     fun finish() {

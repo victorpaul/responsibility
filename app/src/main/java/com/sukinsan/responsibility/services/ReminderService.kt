@@ -8,12 +8,12 @@ import android.os.SystemClock
 import androidx.work.*
 import com.sukinsan.responsibility.broadcastreceivers.AlarmReceiver
 import com.sukinsan.responsibility.entities.TaskEntity
-import com.sukinsan.responsibility.utils.StorageUtils
+import com.sukinsan.responsibility.providers.DBProvider
 import com.sukinsan.responsibility.workmanagers.ReminderWorker
 import java.util.concurrent.TimeUnit
 
-fun newReminderService(ctx: Context, storageUtils: StorageUtils): ReminderService {
-    return ReminderServiceImpl(ctx, storageUtils)
+fun newReminderService(ctx: Context, dbProvider: DBProvider): ReminderService {
+    return ReminderServiceImpl(ctx, dbProvider)
 }
 
 interface ReminderService {
@@ -28,7 +28,7 @@ interface ReminderService {
 
 }
 
-class ReminderServiceImpl(val ctx: Context, val storageUtils: StorageUtils) : ReminderService {
+class ReminderServiceImpl(val ctx: Context, val dbProvider: DBProvider) : ReminderService {
 
     override fun getWorkManager(): WorkManager {
         return WorkManager.getInstance(ctx)
@@ -44,10 +44,10 @@ class ReminderServiceImpl(val ctx: Context, val storageUtils: StorageUtils) : Re
 
             .build()
 
-        storageUtils.lockDB { se ->
+        dbProvider.write { se ->
             task.workerManagerId = cronJob.id.toString()
             se.save(task)
-            return@lockDB true
+            return@write true
         }
 
         return getWorkManager().enqueueUniquePeriodicWork(task.id, ExistingPeriodicWorkPolicy.REPLACE, cronJob)

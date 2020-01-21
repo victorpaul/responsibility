@@ -9,8 +9,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.sukinsan.responsibility.entities.TaskEntity
 import com.sukinsan.responsibility.enums.RemindRuleEnum
+import com.sukinsan.responsibility.providers.newSharedPrefDB
 import com.sukinsan.responsibility.services.newReminderService
-import com.sukinsan.responsibility.utils.newStorageUtils
 import com.sukinsan.responsibility.utils.newTU
 import java.util.*
 
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         val tu = newTU()
-        val storageUt = newStorageUtils(this, tu)
+        val storageUt = newSharedPrefDB(this, tu)
         val workerSv = newReminderService(this, storageUt)
 
         val task = TaskEntity(

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sukinsan.responsibility.R
 import com.sukinsan.responsibility.adapters.TaskAdapter
 import com.sukinsan.responsibility.entities.TaskContainerEntity
-import com.sukinsan.responsibility.utils.newStorageUtils
+import com.sukinsan.responsibility.providers.newSharedPrefDB
 import com.sukinsan.responsibility.utils.newTU
 
 class HomeFragment : Fragment() {
@@ -30,8 +30,8 @@ class HomeFragment : Fragment() {
         val tu = newTU()
 
         context?.let {
-            val storageUt = newStorageUtils(it, tu)
-            val taskContainers = storageUt.getDB().tasks.map { t -> TaskContainerEntity(t.value) }
+            val storageUt = newSharedPrefDB(it, tu)
+            val taskContainers = storageUt.read().getTasksAll().map { t -> TaskContainerEntity(t.value) }
             viewAdapter = TaskAdapter(taskContainers)
         }
 
