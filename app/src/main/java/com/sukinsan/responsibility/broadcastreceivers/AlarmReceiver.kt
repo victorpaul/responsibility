@@ -18,8 +18,8 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val tu = newTU()
-        val storage = newSharedPrefDB(context, tu)
-        val notifySv = newNotificationService(context, tu, storage)
+        val dbProvider = newSharedPrefDB(context, tu)
+        val notifySv = newNotificationService(context, tu, dbProvider)
 
         val flowService = newLogicFlowService(tu, notifySv)
 
@@ -30,7 +30,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         if (flowService.isItNotificationWindow()) {
             notifySv.registerChannel()
-            storage.write { db ->
+            dbProvider.write { db ->
                 val r = flowService.remindUserAboutTask(task, db)
                 Log.i(LOG_TAG, r.message)
                 return@write r.success

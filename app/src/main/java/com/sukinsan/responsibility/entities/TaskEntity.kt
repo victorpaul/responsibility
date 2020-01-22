@@ -2,6 +2,7 @@ package com.sukinsan.responsibility.entities
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import com.google.gson.annotations.Expose
 import com.sukinsan.responsibility.enums.RemindRuleEnum
 import java.util.*
 
@@ -17,12 +18,19 @@ fun taskFromJson(json: String?): TaskEntity? {
 }
 
 class TaskEntity(
+    @Expose
     val id: String,
+    @Expose
     val remindRule: RemindRuleEnum,
+    @Expose
     val description: String,
+    @Expose
     val createdAt: Date,
+    @Expose
     var doneAt: Date? = null,
+    @Expose
     var failedAt: Date? = null,
+    @Expose
     var workerManagerId: String? = null
 ) {
 

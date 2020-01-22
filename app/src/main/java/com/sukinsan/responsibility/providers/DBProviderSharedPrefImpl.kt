@@ -18,13 +18,13 @@ class DBProviderSharedPrefImpl(ctx: Context, val timeUtils: TimeUtils) : DBProvi
         .create()
 
     init {
-        sharedPrefDB = ctx.getSharedPreferences("Tasks", Context.MODE_PRIVATE)
+        sharedPrefDB = ctx.getSharedPreferences("Main", Context.MODE_PRIVATE)
     }
 
     override fun read(): DBUtils {
         val json = sharedPrefDB.getString(storageKey, null)
         try {
-            return Gson().fromJson(json, DBUtilsSharedPrefImpls::class.java)
+            return gson.fromJson(json, DBUtilsSharedPrefImpls::class.java)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -35,7 +35,8 @@ class DBProviderSharedPrefImpl(ctx: Context, val timeUtils: TimeUtils) : DBProvi
         val db = read()
         if (save(db)) {
             val editor = sharedPrefDB.edit()
-            editor.putString(storageKey, gson.toJson(db))
+            val json = gson.toJson(db)
+            editor.putString(storageKey, json)
             return editor.commit()
         }
         return false

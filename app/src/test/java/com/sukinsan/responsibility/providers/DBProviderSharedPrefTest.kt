@@ -1,37 +1,80 @@
-package com.sukinsan.responsibility.utils
+package com.sukinsan.responsibility.providers
 
 import android.content.Context
 import android.content.SharedPreferences
 import com.sukinsan.responsibility.entities.TaskEntity
 import com.sukinsan.responsibility.enums.RemindRuleEnum
-import com.sukinsan.responsibility.providers.newSharedPrefDB
+import com.sukinsan.responsibility.utils.DBUtilsSharedPrefImpls
+import com.sukinsan.responsibility.utils.TimeUtils
+import com.sukinsan.responsibility.utils.newTU
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 
-class StorageUtilsTest {
+class DBProviderSharedPrefTest {
 
     val ctx = mock(Context::class.java)
     val tu = mock(TimeUtils::class.java)
     val sharedPrefTasks: SharedPreferences = mock(SharedPreferences::class.java)
-    val sharedPrefTemps: SharedPreferences = mock(SharedPreferences::class.java)
 
 
     @Before
     fun prepare() {
-        doReturn(sharedPrefTasks).`when`(ctx).getSharedPreferences(eq("Tasks"), anyInt())
-        doReturn(sharedPrefTemps).`when`(ctx).getSharedPreferences(eq("Temps"), anyInt())
+        doReturn(sharedPrefTasks).`when`(ctx)
+            .getSharedPreferences(ArgumentMatchers.anyString(), anyInt())
     }
 
     @After
     fun finish() {
-        verify(ctx).getSharedPreferences("Tasks", Context.MODE_PRIVATE)
-        verify(ctx).getSharedPreferences("Temps", Context.MODE_PRIVATE)
+        verify(ctx).getSharedPreferences("Main", Context.MODE_PRIVATE)
 
-        verifyNoMoreInteractions(ctx, tu, sharedPrefTasks, sharedPrefTemps)
-        reset(ctx, tu, sharedPrefTasks, sharedPrefTemps)
+        verifyNoMoreInteractions(ctx, tu, sharedPrefTasks)
+        reset(ctx, tu, sharedPrefTasks)
+    }
+
+    @Test
+    fun success_read_existing_db() {
+        val task = TaskEntity(
+            "task id5", RemindRuleEnum.DAILY, "Age is just a number",
+            newTU(2020, 0, 22, 14, 4, 8).getDate(), null, null
+        )
+        doReturn(
+            "{\"tasks\":{\"task id5\":{\"id\":\"task id5\",\"remindRule\":\"DAILY\",\"description\":\"Age is just a number\",\"createdAt\":\"Jan 22, 2020 2:04:08 PM\"}},\"keyValue\":{}}"
+        ).`when`(sharedPrefTasks).getString(ArgumentMatchers.anyString(), ArgumentMatchers.any())
+
+        val dbProvider = DBProviderSharedPrefImpl(ctx, tu)
+
+        val db = dbProvider.read()
+
+        verify(sharedPrefTasks).getString("StorageEntity", null)
+        assertEquals(1, db.getTasksAll().size)
+        assertEquals(task.toString(), db.getTasksAll().get("task id5").toString())
+    }
+
+    @Test
+    fun success_read_not_existing_db() {
+        doReturn(null).`when`(sharedPrefTasks)
+            .getString(ArgumentMatchers.anyString(), ArgumentMatchers.any())
+
+        val dbProvider = DBProviderSharedPrefImpl(ctx, tu)
+        val db = dbProvider.read()
+
+        verify(sharedPrefTasks).getString("StorageEntity", null)
+        assertEquals(DBUtilsSharedPrefImpls(tu), db)
+    }
+
+    @Test
+    fun success_serialising_json() {
+        fail()
+    }
+
+    @Test
+    fun success_derialising_json() {
+        fail()
     }
 
 //    @Test

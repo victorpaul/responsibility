@@ -19,14 +19,14 @@ class LogicFlowServiceImpl(val tu: TimeUtils, val ns: NotificationService) : Log
 
     override fun remindUserAboutTask(
         task: TaskEntity?,
-        storage: DBUtils
+        db: DBUtils
     ): Rslt {
         if (task == null) {
             return Rslt(false, "Task is null")
         }
 
-        val lastMessage = storage.getLastMessage(task)
-        storage.saveLastMessage(
+        val lastMessage = db.getLastMessage(task)
+        db.saveLastMessage(
             task,
             arrayOf(
                 "${tu.friendlyTime()} ${task.description}",
