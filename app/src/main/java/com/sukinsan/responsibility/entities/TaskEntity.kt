@@ -42,10 +42,6 @@ class TaskEntity(
         return remindRule.getNotificationId()
     }
 
-    fun toJson(): String {
-        return Gson().toJson(this)
-    }
-
     fun getWorkerUUID(): UUID? {
         if (workerManagerId == null) {
             return null

@@ -36,28 +36,6 @@ class TaskEntityTest {
     }
 
     @Test
-    fun success_json_serialization_deserialization() {
-        val task = TaskEntity(
-            "task id", RemindRuleEnum.DAILY, "Drink water",
-            newTU(3000, 10, 10, 21, 10, 0).getDate(),
-            newTU(3000, 10, 10, 22, 25, 0).getDate(),
-            newTU(3000, 10, 10, 23, 30, 0).getDate(), "UUID-UUID"
-        )
-
-        Assert.assertEquals(
-            "{\"id\":\"task id\",\"remindRule\":\"DAILY\",\"description\":\"Drink water\",\"createdAt\":\"Nov 10, 3000 9:10:00 PM\",\"doneAt\":\"Nov 10, 3000 10:25:00 PM\",\"failedAt\":\"Nov 10, 3000 11:30:00 PM\",\"workerManagerId\":\"UUID-UUID\"}",
-            task.toJson()
-        )
-
-        val expectedTask =
-            taskFromJson("{\"id\":\"task id\",\"notificationId\":1,\"remindRule\":\"DAILY\",\"description\":\"Drink water\",\"createdAt\":\"Nov 10, 3000 9:10:00 PM\",\"doneAt\":\"Nov 10, 3000 10:25:00 PM\",\"failedAt\":\"Nov 10, 3000 11:30:00 PM\",\"workerManagerId\":\"UUID-UUID\"}")
-        // todo, fix equals
-        // Assert.assertEquals(task, expectedTask)
-        Assert.assertEquals(task.toString(), expectedTask.toString())
-
-    }
-
-    @Test
     fun fail_json_serialization_deserialization() {
         Assert.assertEquals(null, taskFromJson(null))
         Assert.assertEquals(null, taskFromJson(""))
