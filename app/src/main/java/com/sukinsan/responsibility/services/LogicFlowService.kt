@@ -1,6 +1,6 @@
 package com.sukinsan.responsibility.services
 
-import com.sukinsan.responsibility.entities.Rslt
+import com.sukinsan.responsibility.entities.FunFeedback
 import com.sukinsan.responsibility.utils.DBUtils
 import com.sukinsan.responsibility.entities.TaskEntity
 import com.sukinsan.responsibility.utils.TimeUtils
@@ -11,7 +11,7 @@ fun newLogicFlowService(tu: TimeUtils, ns: NotificationService): LogicFlowServic
 
 interface LogicFlowService {
 
-    fun remindUserAboutTask(task: TaskEntity?, storage: DBUtils): Rslt
+    fun remindUserAboutTask(task: TaskEntity?, storage: DBUtils): FunFeedback
     fun isItNotificationWindow(): Boolean
 }
 
@@ -20,9 +20,9 @@ class LogicFlowServiceImpl(val tu: TimeUtils, val ns: NotificationService) : Log
     override fun remindUserAboutTask(
         task: TaskEntity?,
         db: DBUtils
-    ): Rslt {
+    ): FunFeedback {
         if (task == null) {
-            return Rslt(false, "Task is null")
+            return FunFeedback(false, "Task is null")
         }
 
         val lastMessage = db.getLastMessage(task)
@@ -43,7 +43,7 @@ class LogicFlowServiceImpl(val tu: TimeUtils, val ns: NotificationService) : Log
             ).filterNotNull().joinToString(".\r\n")
         )
 
-        return Rslt(true, "Task notified")
+        return FunFeedback(true, "Task notified")
     }
 
     override fun isItNotificationWindow(): Boolean {
