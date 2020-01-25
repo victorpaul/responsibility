@@ -3,35 +3,60 @@ package com.sukinsan.responsibility.services
 import com.sukinsan.responsibility.entities.FunFeedback
 import com.sukinsan.responsibility.utils.DBUtils
 import com.sukinsan.responsibility.entities.TaskEntity
+import com.sukinsan.responsibility.enums.RemindRuleEnum
 import com.sukinsan.responsibility.utils.TimeUtils
 
-fun newLogicFlowService(tu: TimeUtils, ns: NotificationService): LogicFlowService {
-    return LogicFlowServiceImpl(tu, ns)
+fun newLogicFlowService(): LogicFlowService {
+    return LogicFlowServiceImpl()
 }
 
 interface LogicFlowService {
 
-    fun remindUserAboutTask(task: TaskEntity?, storage: DBUtils): FunFeedback
-    fun isItNotificationWindow(): Boolean
+    fun isItOkToRemindNow(task: TaskEntity, tu: TimeUtils): FunFeedback
+
+    fun remindUserAboutTask(task: TaskEntity, storage: DBUtils, tu: TimeUtils, ns: NotificationService): FunFeedback
 }
 
-class LogicFlowServiceImpl(val tu: TimeUtils, val ns: NotificationService) : LogicFlowService {
+class LogicFlowServiceImpl : LogicFlowService {
 
-    override fun remindUserAboutTask(
-        task: TaskEntity?,
-        db: DBUtils
-    ): FunFeedback {
-        if (task == null) {
-            return FunFeedback(false, "Task is null")
+    override fun isItOkToRemindNow(task: TaskEntity, tu: TimeUtils): FunFeedback {
+        if (!task.rulesHours.contains(tu.getCurrentHour())) {
+            return FunFeedback(false, "Hourly rules are not met for date ${tu.friendlyDateTimeYear()}")
+        }
+        if (!task.rulesMonths.contains(tu.getCurrentMonth())) {
+            return FunFeedback(false, "Monthly rules are not met for date ${tu.friendlyDateTimeYear()}")
         }
 
-        val lastMessage = db.getLastMessage(task)
+        when (task.remindRule) {
+            RemindRuleEnum.WEEKLY_DAYS ->
+                if (!task.rulesWeek.contains(tu.getCurrentWeekDay())) {
+                    return FunFeedback(false, "Day of week rules are not met for date ${tu.friendlyDateTimeYear()}")
+                }
+            RemindRuleEnum.MONTHLY_DAYS ->
+                if (!task.rulesDays.contains(tu.getCurrentMonthDay())) {
+                    return FunFeedback(false, "Day of month rules are not met for date ${tu.friendlyDateTimeYear()}")
+                }
+            else -> {}
+        }
+
+        return FunFeedback(true, "Remind rules are met for date ${tu.friendlyDateTime()}")
+    }
+
+    override fun remindUserAboutTask(task: TaskEntity, db: DBUtils, tu: TimeUtils, ns: NotificationService): FunFeedback {
+
+        val rulesCheck = isItOkToRemindNow(task, tu)
+        if (!rulesCheck.success) {
+            return rulesCheck
+        }
+
+        val lastMessage = db.getLastMessage(task, tu)
         db.saveLastMessage(
             task,
             arrayOf(
                 "${tu.friendlyTime()} ${task.description}",
                 lastMessage
-            ).filterNotNull().joinToString(".\r\n")
+            ).filterNotNull().joinToString(".\r\n"),
+            tu
         )
         ns.showNotification(
             tu.friendlyDate(),
@@ -44,10 +69,6 @@ class LogicFlowServiceImpl(val tu: TimeUtils, val ns: NotificationService) : Log
         )
 
         return FunFeedback(true, "Task notified")
-    }
-
-    override fun isItNotificationWindow(): Boolean {
-        return tu.getCurrentHour() in 7..23
     }
 
 }

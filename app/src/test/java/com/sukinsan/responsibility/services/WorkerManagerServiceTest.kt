@@ -2,10 +2,8 @@ package com.sukinsan.responsibility.services
 
 import android.content.Context
 import androidx.work.*
-import com.sukinsan.responsibility.entities.TaskEntity
-import com.sukinsan.responsibility.enums.RemindRuleEnum
+import com.sukinsan.responsibility.entities.createEveryHourWeekly
 import com.sukinsan.responsibility.providers.DBProvider
-import com.sukinsan.responsibility.utils.newTU
 import org.junit.After
 import org.junit.Test
 import org.mockito.ArgumentMatchers.*
@@ -26,10 +24,7 @@ class WorkerManagerServiceTest {
 
     @Test
     fun success_run_recurring_task() {
-        val task = TaskEntity(
-            "task id", RemindRuleEnum.DAILY, "Drink water",
-            newTU(3000, 10, 10, 21, 10, 0).getDate()
-        )
+        val task = createEveryHourWeekly("task id", "Drink water")
         val service = Mockito.spy(newReminderService(ctx, su))
         val wm = Mockito.mock(WorkManager::class.java)
         val workRequestBuilder = Mockito.mock(PeriodicWorkRequest.Builder::class.java)

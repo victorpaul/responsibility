@@ -4,8 +4,8 @@ import android.content.Context
 import com.sukinsan.responsibility.utils.DBUtils
 import com.sukinsan.responsibility.utils.TimeUtils
 
-fun newSharedPrefDB(ctx: Context, timeUtils: TimeUtils): DBProvider {
-    return DBProviderSharedPrefImpl(ctx, timeUtils)
+fun newSharedPrefDB(ctx: Context): DBProvider {
+    return DBProviderSharedPrefImpl(ctx)
 }
 
 interface DBProvider {

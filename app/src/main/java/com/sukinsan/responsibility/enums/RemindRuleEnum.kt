@@ -1,8 +1,9 @@
 package com.sukinsan.responsibility.enums
 
 enum class RemindRuleEnum {
-    SOFT_REMIND,
-    REQUIRE_ACTION;
+    WEEKLY_DAYS,
+    MONTHLY_DAYS,
+    EXACT_DAY;
 
     fun getNotificationId(): Int {
         return values().indexOf(this)

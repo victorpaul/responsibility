@@ -7,12 +7,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.sukinsan.responsibility.entities.TaskEntity
-import com.sukinsan.responsibility.enums.RemindRuleEnum
+import com.sukinsan.responsibility.entities.createEveryHourWeekly
 import com.sukinsan.responsibility.providers.newSharedPrefDB
 import com.sukinsan.responsibility.services.newReminderService
-import com.sukinsan.responsibility.utils.newTU
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,22 +33,12 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        val tu = newTU()
-        val storageUt = newSharedPrefDB(this, tu)
+        val storageUt = newSharedPrefDB(this)
         val workerSv = newReminderService(this, storageUt)
 
-        val task = TaskEntity(
-            "task id", RemindRuleEnum.HOURLY,
-            "Drink more water", Date(), null, null
-        )
-        val task3 = TaskEntity(
-            "task id3", RemindRuleEnum.HOURLY,
-            "Eat healthy food", Date(), null, null
-        )
-        val task4 = TaskEntity(
-            "task id4", RemindRuleEnum.HOURLY,
-            "Do sport", Date(), null, null
-        )
+        val task = createEveryHourWeekly("task id", "Drink more water")
+        val task3 = createEveryHourWeekly("task id3", "Eat healthy food")
+        val task4 = createEveryHourWeekly("task id4", "Do sport")
 
         workerSv.runRecurringWorker(task)
         workerSv.runRecurringWorker(task3)

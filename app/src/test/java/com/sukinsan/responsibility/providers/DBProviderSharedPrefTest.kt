@@ -2,11 +2,9 @@ package com.sukinsan.responsibility.providers
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.sukinsan.responsibility.entities.TaskEntity
-import com.sukinsan.responsibility.enums.RemindRuleEnum
+import com.sukinsan.responsibility.entities.createEveryHourWeekly
 import com.sukinsan.responsibility.utils.DBUtilsSharedPrefImpls
 import com.sukinsan.responsibility.utils.TimeUtils
-import com.sukinsan.responsibility.utils.newTU
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
@@ -38,21 +36,20 @@ class DBProviderSharedPrefTest {
 
     @Test
     fun success_read_existing_db() {
-        val task = TaskEntity(
-            "task id5", RemindRuleEnum.DAILY, "Age is just a number",
-            newTU(2020, 0, 22, 14, 4, 8).getDate(), null, null
-        )
-        doReturn(
-            "{\"tasks\":{\"task id5\":{\"id\":\"task id5\",\"remindRule\":\"DAILY\",\"description\":\"Age is just a number\",\"createdAt\":\"Jan 22, 2020 2:04:08 PM\"}},\"keyValue\":{}}"
-        ).`when`(sharedPrefTasks).getString(ArgumentMatchers.anyString(), ArgumentMatchers.any())
+        val dbProvider = DBProviderSharedPrefImpl(ctx)
 
-        val dbProvider = DBProviderSharedPrefImpl(ctx, tu)
+        val task = createEveryHourWeekly("task id5", "Age is just a number")
+        val json = dbProvider.gson.toJson(
+            DBUtilsSharedPrefImpls().apply {
+                save(task)
+            })
+        doReturn(json).`when`(sharedPrefTasks).getString(ArgumentMatchers.anyString(), ArgumentMatchers.any())
 
         val db = dbProvider.read()
 
         verify(sharedPrefTasks).getString("StorageEntity", null)
         assertEquals(1, db.getTasksAll().size)
-        assertEquals(task.toString(), db.getTasksAll().get("task id5").toString())
+        assertEquals(task, db.getTasksAll().get("task id5"))
     }
 
     @Test
@@ -60,11 +57,11 @@ class DBProviderSharedPrefTest {
         doReturn(null).`when`(sharedPrefTasks)
             .getString(ArgumentMatchers.anyString(), ArgumentMatchers.any())
 
-        val dbProvider = DBProviderSharedPrefImpl(ctx, tu)
+        val dbProvider = DBProviderSharedPrefImpl(ctx)
         val db = dbProvider.read()
 
         verify(sharedPrefTasks).getString("StorageEntity", null)
-        assertEquals(DBUtilsSharedPrefImpls(tu), db)
+        assertEquals(DBUtilsSharedPrefImpls(), db)
     }
 
     @Test

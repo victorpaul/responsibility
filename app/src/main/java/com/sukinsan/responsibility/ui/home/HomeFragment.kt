@@ -30,7 +30,7 @@ class HomeFragment : Fragment() {
         val tu = newTU()
 
         context?.let {
-            val storageUt = newSharedPrefDB(it, tu)
+            val storageUt = newSharedPrefDB(it)
             val taskContainers = storageUt.read().getTasksAll().map { t -> TaskContainerEntity(t.value) }
             viewAdapter = TaskAdapter(taskContainers)
         }

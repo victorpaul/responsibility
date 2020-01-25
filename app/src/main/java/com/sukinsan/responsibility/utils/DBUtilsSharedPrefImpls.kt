@@ -3,7 +3,7 @@ package com.sukinsan.responsibility.utils
 import com.google.gson.annotations.Expose
 import com.sukinsan.responsibility.entities.TaskEntity
 
-class DBUtilsSharedPrefImpls(val tu: TimeUtils) : DBUtils {
+class DBUtilsSharedPrefImpls : DBUtils {
     @Expose
     val tasks: MutableMap<String, TaskEntity> = HashMap()
     @Expose
@@ -25,12 +25,12 @@ class DBUtilsSharedPrefImpls(val tu: TimeUtils) : DBUtils {
         return null
     }
 
-    override fun saveLastMessage(task: TaskEntity, lastMessage: String): Boolean {
+    override fun saveLastMessage(task: TaskEntity, lastMessage: String, tu: TimeUtils): Boolean {
         keyValue.put("${task.getNotoficationId()}-${tu.friendlyDate()}", lastMessage)
         return true
     }
 
-    override fun getLastMessage(task: TaskEntity): String? {
+    override fun getLastMessage(task: TaskEntity, tu: TimeUtils): String? {
         val key = "${task.getNotoficationId()}-${tu.friendlyDate()}"
         if (keyValue.containsKey(key)) {
             return keyValue.get(key)
@@ -44,7 +44,6 @@ class DBUtilsSharedPrefImpls(val tu: TimeUtils) : DBUtils {
 
         other as DBUtilsSharedPrefImpls
 
-        if (tu != other.tu) return false
         if (tasks != other.tasks) return false
         if (keyValue != other.keyValue) return false
 
@@ -52,8 +51,7 @@ class DBUtilsSharedPrefImpls(val tu: TimeUtils) : DBUtils {
     }
 
     override fun hashCode(): Int {
-        var result = tu.hashCode()
-        result = 31 * result + tasks.hashCode()
+        var result = tasks.hashCode()
         result = 31 * result + keyValue.hashCode()
         return result
     }

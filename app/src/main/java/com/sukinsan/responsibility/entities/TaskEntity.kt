@@ -1,20 +1,33 @@
 package com.sukinsan.responsibility.entities
 
-import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
 import com.google.gson.annotations.Expose
 import com.sukinsan.responsibility.enums.RemindRuleEnum
 import java.util.*
 
-fun taskFromJson(json: String?): TaskEntity? {
-    if (json == null || json.trim().isEmpty()) {
-        return null
-    }
-    try {
-        return Gson().fromJson(json, TaskEntity::class.java)
-    } catch (e: JsonSyntaxException) {
-        return null
-    }
+fun createEveryHourWeekly(id: String, desc: String): TaskEntity {
+    return TaskEntity(
+        id,
+        RemindRuleEnum.WEEKLY_DAYS,
+        listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+        listOf(1, 2, 3, 4, 5, 6, 7),
+        emptyList(),
+        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+        null,
+        desc, null
+    )
+}
+
+fun createEveryHourDaily(id: String, desc: String): TaskEntity {
+    return TaskEntity(
+        id,
+        RemindRuleEnum.WEEKLY_DAYS,
+        listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+        emptyList(),
+        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31),
+        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+        null,
+        desc, null
+    )
 }
 
 class TaskEntity(
@@ -27,17 +40,15 @@ class TaskEntity(
     @Expose
     val rulesWeek: List<Int>, // 1-7
     @Expose
+    val rulesDays: List<Int>, // 1-31
+    @Expose
     val rulesMonths: List<Int>, // 1-12
     @Expose
-    val rulesExactDate: Date,
+    val rulesExactDate: Date?,
     @Expose
     val description: String,
     @Expose
-    val createdAt: Date,
-    @Expose
-    var doneAt: List<Date>? = null,
-    @Expose
-    var workerManagerId: String? = null
+    var workerManagerId: String?
 ) {
 
     fun getNotoficationId(): Int {
@@ -61,11 +72,10 @@ class TaskEntity(
         if (remindRule != other.remindRule) return false
         if (rulesHours != other.rulesHours) return false
         if (rulesWeek != other.rulesWeek) return false
+        if (rulesDays != other.rulesDays) return false
         if (rulesMonths != other.rulesMonths) return false
         if (rulesExactDate != other.rulesExactDate) return false
         if (description != other.description) return false
-        if (createdAt != other.createdAt) return false
-        if (doneAt != other.doneAt) return false
         if (workerManagerId != other.workerManagerId) return false
 
         return true
@@ -76,17 +86,16 @@ class TaskEntity(
         result = 31 * result + remindRule.hashCode()
         result = 31 * result + rulesHours.hashCode()
         result = 31 * result + rulesWeek.hashCode()
+        result = 31 * result + rulesDays.hashCode()
         result = 31 * result + rulesMonths.hashCode()
-        result = 31 * result + rulesExactDate.hashCode()
+        result = 31 * result + (rulesExactDate?.hashCode() ?: 0)
         result = 31 * result + description.hashCode()
-        result = 31 * result + createdAt.hashCode()
-        result = 31 * result + (doneAt?.hashCode() ?: 0)
         result = 31 * result + (workerManagerId?.hashCode() ?: 0)
         return result
     }
 
     override fun toString(): String {
-        return "TaskEntity(id='$id', remindRule=$remindRule, rulesHours=$rulesHours, rulesWeek=$rulesWeek, rulesMonths=$rulesMonths, rulesExactDate=$rulesExactDate, description='$description', createdAt=$createdAt, doneAt=$doneAt, workerManagerId=$workerManagerId)"
+        return "TaskEntity(id='$id', remindRule=$remindRule, rulesHours=$rulesHours, rulesWeek=$rulesWeek, rulesDays=$rulesDays, rulesMonths=$rulesMonths, rulesExactDate=$rulesExactDate, description='$description', workerManagerId=$workerManagerId)"
     }
 
 }
