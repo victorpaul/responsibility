@@ -14,26 +14,17 @@ class DBUtilsSharedPrefImpls : DBUtils {
         return false
     }
 
-    override fun getTasksAll(): MutableMap<String, TaskEntity> {
+    override fun getTasksMap(): MutableMap<String, TaskEntity> {
         return tasks
+    }
+
+    override fun getTasksList(): List<TaskEntity> {
+        return tasks.values.toMutableList()
     }
 
     override fun getTaskById(taskId: String): TaskEntity? {
         if (tasks.containsKey(taskId)) {
             return tasks.get(taskId)
-        }
-        return null
-    }
-
-    override fun saveLastMessage(task: TaskEntity, lastMessage: String, tu: TimeUtils): Boolean {
-        keyValue.put("${task.getNotoficationId()}-${tu.friendlyDate()}", lastMessage)
-        return true
-    }
-
-    override fun getLastMessage(task: TaskEntity, tu: TimeUtils): String? {
-        val key = "${task.getNotoficationId()}-${tu.friendlyDate()}"
-        if (keyValue.containsKey(key)) {
-            return keyValue.get(key)
         }
         return null
     }

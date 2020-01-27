@@ -7,8 +7,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.sukinsan.responsibility.entities.createEveryHourDaily
 import com.sukinsan.responsibility.entities.createEveryHourWeekly
 import com.sukinsan.responsibility.providers.newSharedPrefDB
+import com.sukinsan.responsibility.services.newNotificationService
 import com.sukinsan.responsibility.services.newReminderService
 
 class MainActivity : AppCompatActivity() {
@@ -35,16 +37,25 @@ class MainActivity : AppCompatActivity() {
 
         val storageUt = newSharedPrefDB(this)
         val workerSv = newReminderService(this, storageUt)
+        val notfService = newNotificationService(this)
 
-        val task = createEveryHourWeekly("task id", "Drink more water")
+        notfService.registerChannel()
+
+        val task = createEveryHourWeekly("task id", "Drink water")
         val task3 = createEveryHourWeekly("task id3", "Eat healthy food")
-        val task4 = createEveryHourWeekly("task id4", "Do sport")
+        val task5 = createEveryHourDaily("task id5", "Age is just a number")
 
-        workerSv.runRecurringWorker(task)
-        workerSv.runRecurringWorker(task3)
-        workerSv.runRecurringWorker(task4)
+        storageUt.write {
+            it.save(task)
+            it.save(task3)
+            it.save(task5)
+            return@write true
+        }
+
+//        workerSv.runRecurringWorker(task) // todo, think about this worker
+//        workerSv.runRecurringWorker(task3)
+//        workerSv.runRecurringWorker(task4)
 
         workerSv.runRecurringAlarm()
-
     }
 }

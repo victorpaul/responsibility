@@ -4,8 +4,7 @@ import com.sukinsan.responsibility.entities.TaskEntity
 
 interface DBUtils {
     fun save(task: TaskEntity): Boolean
-    fun getTasksAll(): MutableMap<String, TaskEntity>
+    fun getTasksMap(): MutableMap<String, TaskEntity>
+    fun getTasksList(): List<TaskEntity>
     fun getTaskById(taskId: String): TaskEntity?
-    fun saveLastMessage(task: TaskEntity, lastMessage: String, tu: TimeUtils): Boolean
-    fun getLastMessage(task: TaskEntity, tu: TimeUtils): String?
 }

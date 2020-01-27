@@ -17,10 +17,10 @@ fun createEveryHourWeekly(id: String, desc: String): TaskEntity {
     )
 }
 
-fun createEveryHourDaily(id: String, desc: String): TaskEntity {
+fun createEveryHourDaily(id: String, desc: String): TaskEntity { // todo test it
     return TaskEntity(
         id,
-        RemindRuleEnum.WEEKLY_DAYS,
+        RemindRuleEnum.MONTHLY_DAYS,
         listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
         emptyList(),
         listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31),
@@ -52,7 +52,8 @@ class TaskEntity(
 ) {
 
     fun getNotoficationId(): Int {
-        return remindRule.getNotificationId()
+        //return remindRule.getNotificationId()
+        return id.hashCode()
     }
 
     fun getWorkerUUID(): UUID? {

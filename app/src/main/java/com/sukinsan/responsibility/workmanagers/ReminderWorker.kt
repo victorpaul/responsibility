@@ -18,7 +18,7 @@ class ReminderWorker(appContext: Context, workerParams: WorkerParameters) :
         val tu = newTU()
         val taskId = inputData.keyValueMap.get("taskId")
         val storageUtils = newSharedPrefDB(applicationContext)
-        val notifySv = newNotificationService(applicationContext, tu, storageUtils)
+        val notifySv = newNotificationService(applicationContext)
 
         val flowService = newLogicFlowService()
 
