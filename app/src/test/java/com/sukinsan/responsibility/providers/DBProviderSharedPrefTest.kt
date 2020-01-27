@@ -11,6 +11,7 @@ import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers
+import org.mockito.Mockito
 import org.mockito.Mockito.*
 
 class DBProviderSharedPrefTest {
@@ -65,13 +66,26 @@ class DBProviderSharedPrefTest {
     }
 
     @Test
-    fun success_serialising_json() {
-        fail()
-    }
+    fun success_write_to_db() {
+        val dbProvider = spy(DBProviderSharedPrefImpl(ctx))
+        val editor = mock(SharedPreferences.Editor::class.java)
+        doReturn(DBUtilsSharedPrefImpls()).`when`(dbProvider).read()
+        doReturn(editor).`when`(sharedPrefTasks).edit()
+        doReturn(editor).`when`(editor).putString(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())
+        doReturn(true).`when`(editor).commit()
 
-    @Test
-    fun success_derialising_json() {
-        fail()
+
+        val task = createEveryHourWeekly("task id5", "Age is just a number")
+
+        assertEquals(true, dbProvider.write {
+            it.save(task)
+            return@write true
+        })
+
+        verify(dbProvider).read()
+        verify(sharedPrefTasks).getString("StorageEntity", null)
+
+        //verifyNoMoreInteractions(editor)
     }
 
 //    @Test
