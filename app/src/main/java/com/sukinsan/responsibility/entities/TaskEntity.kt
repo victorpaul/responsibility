@@ -38,11 +38,11 @@ class TaskEntity(
     @Expose
     val rulesHours: List<Int>, // 0-23
     @Expose
-    val rulesWeek: List<Int>, // 1-7
+    val rulesWeek: List<Int>, // 0,1-7 // todo test 0, 0 is all
     @Expose
-    val rulesDays: List<Int>, // 1-31
+    val rulesDays: List<Int>, // 0, 1-31 // todo test 0, 0 is all
     @Expose
-    val rulesMonths: List<Int>, // 1-12
+    val rulesMonths: List<Int>, // 0, 1-12  // todo test 0, 0 is all
     @Expose
     val rulesExactDate: Date?,
     @Expose
