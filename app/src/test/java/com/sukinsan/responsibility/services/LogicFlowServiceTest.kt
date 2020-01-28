@@ -34,7 +34,7 @@ class LogicFlowServiceTest {
             emptyList(),
             listOf(1),
             null,
-            "desk", null, null
+            "desk", null, mutableListOf(), mutableListOf()
         )
         newTU(2020, 0, 26, 9, 25, 0).apply {
             assertEquals("2020 Jan 26, 09:25", this.friendlyDateTimeYear())
@@ -60,7 +60,7 @@ class LogicFlowServiceTest {
             listOf(26),
             listOf(1),
             null,
-            "desk", null, null
+            "desk", null, mutableListOf(), mutableListOf()
         )
         newTU(2020, 0, 26, 9, 25, 0).apply {
             assertEquals("2020 Jan 26, 09:25", this.friendlyDateTimeYear())
@@ -77,7 +77,7 @@ class LogicFlowServiceTest {
     }
 
     @Test
-    fun fail_to_allow_to_remind_at_invalid_month(){
+    fun fail_to_allow_to_remind_at_invalid_month() {
         val task = TaskEntity(
             "id",
             RemindRuleEnum.MONTHLY_DAYS,
@@ -86,7 +86,7 @@ class LogicFlowServiceTest {
             listOf(26),
             listOf(1),
             null,
-            "desk", null, null
+            "desk", null, mutableListOf(), mutableListOf()
         )
 
         assertEquals(
@@ -99,7 +99,7 @@ class LogicFlowServiceTest {
     }
 
     @Test
-    fun fail_to_allow_to_remind_at_invalid_hour(){
+    fun fail_to_allow_to_remind_at_invalid_hour() {
         val task = TaskEntity(
             "id",
             RemindRuleEnum.MONTHLY_DAYS,
@@ -108,7 +108,7 @@ class LogicFlowServiceTest {
             listOf(26),
             listOf(1),
             null,
-            "desk", null, null
+            "desk", null, mutableListOf(), mutableListOf()
         )
 
         assertEquals(

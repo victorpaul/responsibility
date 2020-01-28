@@ -19,4 +19,9 @@ class NotificationServiceTest {
     fun success_show_notification_for_task(){
         fail()
     }
+
+    @Test
+    fun fail_to_show_notification_for_task(){
+        fail()
+    }
 }

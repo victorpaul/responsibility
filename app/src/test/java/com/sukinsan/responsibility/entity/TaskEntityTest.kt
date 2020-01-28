@@ -32,7 +32,8 @@ class TaskEntityTest {
                     "rulesExactDate=null, " +
                     "description='Drink water', " +
                     "workerManagerId=null, " +
-                    "notifiedAt=null)",
+                    "notifiedAt=[], " +
+                    "tags=[])",
             task.toString()
         )
 
@@ -44,7 +45,7 @@ class TaskEntityTest {
                 listOf(1, 2, 3, 4, 5, 6, 7),
                 emptyList(),
                 listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-                null, "Drink water", null, null
+                null, "Drink water", null, mutableListOf(), mutableListOf()
             ), task
         )
     }

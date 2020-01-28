@@ -25,9 +25,13 @@ interface TimeUtils {
 
     fun friendlyDateTime(): String
 
+    fun friendlyDateTime(date: Date): String
+
     fun friendlyDateTimeYear(): String
 
     fun friendlyDate(): String
+
+    fun friendlyTime(date: Date): String
 
     fun friendlyTime(): String
 
@@ -68,8 +72,12 @@ class TimeUtilsImpl(val calendar: Calendar) : TimeUtils {
         return calendar.get(Calendar.MONTH) + 1 // jan is 1, dec is 12
     }
 
+    override fun friendlyDateTime(date: Date): String {
+        return dfDateTime.format(date)
+    }
+
     override fun friendlyDateTime(): String {
-        return dfDateTime.format(calendar.time)
+        return friendlyDateTime(calendar.time)
     }
 
     override fun friendlyDateTimeYear(): String {
@@ -80,8 +88,12 @@ class TimeUtilsImpl(val calendar: Calendar) : TimeUtils {
         return dfDate.format(calendar.time)
     }
 
+    override fun friendlyTime(date: Date): String {
+        return dfTime.format(date)
+    }
+
     override fun friendlyTime(): String {
-        return dfTime.format(calendar.time)
+        return friendlyTime(calendar.time)
     }
 
     override fun getDate(): Date {

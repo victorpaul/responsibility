@@ -41,16 +41,16 @@ class MainActivity : AppCompatActivity() {
 
         notfService.registerChannel()
 
-        val task = createEveryHourWeekly("task id", "Drink water")
-        val task3 = createEveryHourWeekly("task id3", "Eat healthy food")
-        val task5 = createEveryHourDaily("task id5", "Age is just a number")
-
-        storageUt.write {
-            it.save(task)
-            it.save(task3)
-            it.save(task5)
-            return@write true
-        }
+//        val task = createEveryHourWeekly("task id", "Drink water")
+//        val task3 = createEveryHourWeekly("task id3", "Eat healthy food")
+//        val task5 = createEveryHourDaily("task id5", "Age is just a number")
+//
+//        storageUt.write {
+//            it.save(task)
+//            it.save(task3)
+//            it.save(task5)
+//            return@write true
+//        }
 
 //        workerSv.runRecurringWorker(task) // todo, think about this worker
 //        workerSv.runRecurringWorker(task3)

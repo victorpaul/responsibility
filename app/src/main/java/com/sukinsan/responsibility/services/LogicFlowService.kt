@@ -72,15 +72,19 @@ class LogicFlowServiceImpl : LogicFlowService {
             return rulesCheck
         }
 
+        task.notifiedAt.add(tu.getDate())
+        db.save(task)
+        val times = task.notifiedAt.sortedByDescending { it.time }.map { tu.friendlyTime(it) }.joinToString(", ")
+
         ns.showNotification(
             tu.friendlyDate(),
             task.description,
             task.getNotoficationId(),
             arrayOf(
                 "${task.description}",
-                "**",
+                "Was reminded on: ${times}",
                 null
-            ).filterNotNull().joinToString(".\r\n")
+            ).filterNotNull().joinToString(".\n")
         )
 
         return FunFeedback(true, "Task notified")

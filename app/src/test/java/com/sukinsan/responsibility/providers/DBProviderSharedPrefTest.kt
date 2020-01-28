@@ -88,7 +88,8 @@ class DBProviderSharedPrefTest {
                 "\"rulesWeek\":[1,2,3,4,5,6,7]," +
                 "\"rulesDays\":[]," +
                 "\"rulesMonths\":[1,2,3,4,5,6,7,8,9,10,11,12]," +
-                "\"description\":\"Age is just a number\"}}," +
+                "\"description\":\"Age is just a number\"," +
+                "\"notifiedAt\":[],\"tags\":[]}}," +
                 "\"keyValue\":{}}")
         verify(editor).commit()
 
