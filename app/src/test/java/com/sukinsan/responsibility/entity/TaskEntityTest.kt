@@ -24,7 +24,15 @@ class TaskEntityTest {
         Assert.assertEquals(listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), task.rulesMonths)
 
         Assert.assertEquals(
-            "TaskEntity(id='task id', remindRule=WEEKLY_DAYS, rulesHours=[8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], rulesWeek=[1, 2, 3, 4, 5, 6, 7], rulesDays=[], rulesMonths=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], rulesExactDate=null, description='Drink water', workerManagerId=null)",
+            "TaskEntity(id='task id', remindRule=WEEKLY_DAYS, " +
+                    "rulesHours=[8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], " +
+                    "rulesWeek=[1, 2, 3, 4, 5, 6, 7], " +
+                    "rulesDays=[], " +
+                    "rulesMonths=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], " +
+                    "rulesExactDate=null, " +
+                    "description='Drink water', " +
+                    "workerManagerId=null, " +
+                    "notifiedAt=null)",
             task.toString()
         )
 
@@ -36,7 +44,7 @@ class TaskEntityTest {
                 listOf(1, 2, 3, 4, 5, 6, 7),
                 emptyList(),
                 listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-                null, "Drink water", null
+                null, "Drink water", null, null
             ), task
         )
     }

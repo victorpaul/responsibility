@@ -13,7 +13,7 @@ fun createEveryHourWeekly(id: String, desc: String): TaskEntity {
         emptyList(),
         listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
         null,
-        desc, null
+        desc, null, null
     )
 }
 
@@ -26,7 +26,7 @@ fun createEveryHourDaily(id: String, desc: String): TaskEntity { // todo test it
         listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31),
         listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
         null,
-        desc, null
+        desc, null, null
     )
 }
 
@@ -48,7 +48,9 @@ class TaskEntity(
     @Expose
     val description: String,
     @Expose
-    var workerManagerId: String?
+    var workerManagerId: String?,
+    @Expose
+    val notifiedAt: List<Date>?
 ) {
 
     fun getNotoficationId(): Int {
@@ -78,6 +80,7 @@ class TaskEntity(
         if (rulesExactDate != other.rulesExactDate) return false
         if (description != other.description) return false
         if (workerManagerId != other.workerManagerId) return false
+        if (notifiedAt != other.notifiedAt) return false
 
         return true
     }
@@ -92,11 +95,13 @@ class TaskEntity(
         result = 31 * result + (rulesExactDate?.hashCode() ?: 0)
         result = 31 * result + description.hashCode()
         result = 31 * result + (workerManagerId?.hashCode() ?: 0)
+        result = 31 * result + (notifiedAt?.hashCode() ?: 0)
         return result
     }
 
     override fun toString(): String {
-        return "TaskEntity(id='$id', remindRule=$remindRule, rulesHours=$rulesHours, rulesWeek=$rulesWeek, rulesDays=$rulesDays, rulesMonths=$rulesMonths, rulesExactDate=$rulesExactDate, description='$description', workerManagerId=$workerManagerId)"
+        return "TaskEntity(id='$id', remindRule=$remindRule, rulesHours=$rulesHours, rulesWeek=$rulesWeek, rulesDays=$rulesDays, rulesMonths=$rulesMonths, rulesExactDate=$rulesExactDate, description='$description', workerManagerId=$workerManagerId, notifiedAt=$notifiedAt)"
     }
+
 
 }

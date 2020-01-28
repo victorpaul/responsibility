@@ -16,7 +16,7 @@ class NotificationServiceTest {
     }
 
     @Test
-    fun success_show_notification_for_hourly_task(){
+    fun success_show_notification_for_task(){
         fail()
     }
 }

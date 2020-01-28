@@ -22,7 +22,11 @@ interface ReminderService {
 
     fun createPeriodicWorkRequestBuilder(repeatInterval: Long, repeatIntervalTimeUnit: TimeUnit): PeriodicWorkRequest.Builder
 
+    fun createOneOffWorkRequestBuilder(): OneTimeWorkRequest.Builder
+
     fun runRecurringWorker(task: TaskEntity): Operation
+
+    fun runOneTimeWorker(task: TaskEntity, delayMinutes: Long): Operation
 
     fun runRecurringAlarm(): Boolean
 
@@ -38,10 +42,13 @@ class ReminderServiceImpl(val ctx: Context, val dbProvider: DBProvider) : Remind
         return PeriodicWorkRequestBuilder<ReminderWorker>(repeatInterval, repeatIntervalTimeUnit)
     }
 
+    override fun createOneOffWorkRequestBuilder(): OneTimeWorkRequest.Builder {
+        return OneTimeWorkRequest.Builder(ReminderWorker::class.java)
+    }
+
     override fun runRecurringWorker(task: TaskEntity): Operation {
         val cronJob = createPeriodicWorkRequestBuilder(1, TimeUnit.HOURS)
             .setInputData(workDataOf(Pair("taskId", task.id)))
-
             .build()
 
         dbProvider.write { se ->
@@ -53,13 +60,31 @@ class ReminderServiceImpl(val ctx: Context, val dbProvider: DBProvider) : Remind
         return getWorkManager().enqueueUniquePeriodicWork(task.id, ExistingPeriodicWorkPolicy.REPLACE, cronJob)
     }
 
+    override fun runOneTimeWorker(task: TaskEntity, delayMinutes: Long): Operation { // todo, test it
+        val cronJob = createOneOffWorkRequestBuilder()
+            .setInputData(workDataOf(Pair("taskId", task.id)))
+            .setInitialDelay(delayMinutes, TimeUnit.MINUTES)
+            .build()
+
+        dbProvider.write { se ->
+            task.workerManagerId = cronJob.id.toString()
+            se.save(task)
+            return@write true
+        }
+
+        return getWorkManager().enqueueUniqueWork(
+            task.id,
+            ExistingWorkPolicy.REPLACE,
+            cronJob
+        )
+    }
+
     override fun runRecurringAlarm(): Boolean {
         val alarmMgr = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmIntent = Intent(ctx, AlarmReceiver::class.java).let { intent ->
-
             PendingIntent.getBroadcast(ctx, 0, intent, 0)
         }
-        // Hopefully your alarm will have a lower frequency than this!
+
         alarmMgr?.setInexactRepeating(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
             SystemClock.elapsedRealtime(),

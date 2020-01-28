@@ -34,7 +34,7 @@ class LogicFlowServiceTest {
             emptyList(),
             listOf(1),
             null,
-            "desk", null
+            "desk", null, null
         )
         newTU(2020, 0, 26, 9, 25, 0).apply {
             assertEquals("2020 Jan 26, 09:25", this.friendlyDateTimeYear())
@@ -60,7 +60,7 @@ class LogicFlowServiceTest {
             listOf(26),
             listOf(1),
             null,
-            "desk", null
+            "desk", null, null
         )
         newTU(2020, 0, 26, 9, 25, 0).apply {
             assertEquals("2020 Jan 26, 09:25", this.friendlyDateTimeYear())
@@ -86,7 +86,7 @@ class LogicFlowServiceTest {
             listOf(26),
             listOf(1),
             null,
-            "desk", null
+            "desk", null, null
         )
 
         assertEquals(
@@ -108,7 +108,7 @@ class LogicFlowServiceTest {
             listOf(26),
             listOf(1),
             null,
-            "desk", null
+            "desk", null, null
         )
 
         assertEquals(

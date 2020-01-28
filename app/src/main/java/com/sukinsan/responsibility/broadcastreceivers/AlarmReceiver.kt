@@ -5,29 +5,24 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.sukinsan.responsibility.providers.newSharedPrefDB
-import com.sukinsan.responsibility.services.newLogicFlowService
 import com.sukinsan.responsibility.services.newNotificationService
-import com.sukinsan.responsibility.utils.newTU
+import com.sukinsan.responsibility.services.newReminderService
 
 class AlarmReceiver : BroadcastReceiver() {
 
     val LOG_TAG = this.javaClass.toString()
 
     override fun onReceive(context: Context, intent: Intent) {
-        val tu = newTU()
         val dbProvider = newSharedPrefDB(context)
-        val notifySv = newNotificationService(context)
-        val flowService = newLogicFlowService()
+        val workerSv = newReminderService(context, dbProvider)
+        val notfService = newNotificationService(context)
 
-        dbProvider.write { db ->
-            return@write db.getTasksMap().map { task ->
-                flowService.remindUserAboutTask(
-                    task.value,
-                    db,
-                    tu,
-                    notifySv
-                ).success
-            }.filter { it }.isNotEmpty()
+        val tasks = dbProvider.read().getTasksList()
+        val tasksInterval = 30 / tasks.size
+
+        notfService.registerChannel()
+        tasks.forEachIndexed { index, taskEntity ->
+            workerSv.runOneTimeWorker(taskEntity, (index * tasksInterval).toLong())
         }
         Log.i(LOG_TAG, "onReceive")
     }
