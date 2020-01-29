@@ -46,8 +46,8 @@ class DBProviderSharedPrefTest {
         val db = dbProvider.read()
 
         verify(sharedPrefTasks).getString("StorageEntity", null)
-        assertEquals(1, db.getTasksMap().size)
-        assertEquals(task, db.getTasksMap().get("task id5"))
+        assertEquals(1, db.getTasksList().size)
+        assertEquals(task, db.getTaskById("task id5"))
     }
 
     @Test
@@ -80,17 +80,19 @@ class DBProviderSharedPrefTest {
 
         verify(dbProvider).read()
         verify(sharedPrefTasks).edit()
-        verify(editor).putString("StorageEntity","{" +
-                "\"tasks\":{\"task id5\":{" +
-                "\"id\":\"task id5\"," +
-                "\"remindRule\":\"WEEKLY_DAYS\"," +
-                "\"rulesHours\":[8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]," +
-                "\"rulesWeek\":[1,2,3,4,5,6,7]," +
-                "\"rulesDays\":[]," +
-                "\"rulesMonths\":[1,2,3,4,5,6,7,8,9,10,11,12]," +
-                "\"description\":\"Age is just a number\"," +
-                "\"notifiedAt\":[],\"tags\":[]}}," +
-                "\"keyValue\":{}}")
+        verify(editor).putString(
+            "StorageEntity", "{" +
+                    "\"tasks\":{\"task id5\":{" +
+                    "\"id\":\"task id5\"," +
+                    "\"remindRule\":\"WEEKLY_DAYS\"," +
+                    "\"rulesHours\":[8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]," +
+                    "\"rulesWeek\":[1,2,3,4,5,6,7]," +
+                    "\"rulesDays\":[]," +
+                    "\"rulesMonths\":[1,2,3,4,5,6,7,8,9,10,11,12]," +
+                    "\"description\":\"Age is just a number\"," +
+                    "\"notifiedAt\":[],\"tags\":[]}}," +
+                    "\"keyValue\":{}}"
+        )
         verify(editor).commit()
 
         verifyNoMoreInteractions(editor)

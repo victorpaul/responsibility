@@ -67,6 +67,22 @@ class TaskEntity(
         return UUID.fromString(workerManagerId)
     }
 
+    fun describeRulesHors(friendly: Boolean): String {
+        return ""
+    }
+
+    fun describeRulesWeekle(friendly: Boolean): String {
+        return ""
+    }
+
+    fun describeRulesDaily(friendly: Boolean): String {
+        return ""
+    }
+
+    fun describeRulesMonthly(friendly: Boolean): String {
+        return ""
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

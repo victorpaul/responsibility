@@ -14,10 +14,6 @@ class DBUtilsSharedPrefImpls : DBUtils {
         return false
     }
 
-    override fun getTasksMap(): MutableMap<String, TaskEntity> {
-        return tasks
-    }
-
     override fun getTasksList(): List<TaskEntity> {
         return tasks.values.toMutableList()
     }

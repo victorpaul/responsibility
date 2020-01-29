@@ -5,6 +5,7 @@ import com.sukinsan.responsibility.entities.createEveryHourWeekly
 import com.sukinsan.responsibility.enums.RemindRuleEnum
 import junit.framework.TestCase.assertEquals
 import org.junit.Assert
+import org.junit.Assert.fail
 import org.junit.Test
 import java.util.*
 
@@ -68,6 +69,26 @@ class TaskEntityTest {
             null,
             task.getWorkerUUID()
         )
+    }
+
+    @Test
+    fun sdfsf() {
+        fail(); // todo im here
+//        fun describeRulesHors(friendly: Boolean): String {
+//            return ""
+//        }
+//
+//        fun describeRulesWeekle(friendly: Boolean): String {
+//            return ""
+//        }
+//
+//        fun describeRulesDaily(friendly: Boolean): String {
+//            return ""
+//        }
+//
+//        fun describeRulesMonthly(friendly: Boolean): String {
+//            return ""
+//        }
     }
 
 }
