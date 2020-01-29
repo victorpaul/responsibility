@@ -73,6 +73,18 @@ class TaskEntityTest {
 
     @Test
     fun sdfsf() {
+
+        TaskEntity(
+            "",
+            RemindRuleEnum.MONTHLY_DAYS,
+            listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+            emptyList(),
+            emptyList(),
+            emptyList(),
+            null,
+            "", null, mutableListOf(), mutableListOf()
+        )
+
         fail(); // todo im here
 //        fun describeRulesHors(friendly: Boolean): String {
 //            return ""
