@@ -27,18 +27,17 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val tu = newTU()
-
         context?.let {
             val storageUt = newSharedPrefDB(it)
-            val taskContainers = storageUt.read().getTasksMap().map { t -> TaskContainerEntity(t.value) }
+            val taskContainers =
+                storageUt.read().getTasksMap().map { t -> TaskContainerEntity(t.value, false) }
             viewAdapter = TaskAdapter(taskContainers)
         }
 
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
-        val textView: TextView = root.findViewById(R.id.text_home)
+
         root.findViewById<RecyclerView>(R.id.tasks_recycler_view).apply {
             setHasFixedSize(true)
             layoutManager =
@@ -47,7 +46,7 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.text.observe(this, Observer {
-            textView.text = it
+//            textView.text = it
         })
         return root
     }
