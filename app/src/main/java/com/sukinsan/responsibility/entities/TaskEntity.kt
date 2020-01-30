@@ -2,6 +2,8 @@ package com.sukinsan.responsibility.entities
 
 import com.google.gson.annotations.Expose
 import com.sukinsan.responsibility.enums.RemindRuleEnum
+import com.sukinsan.responsibility.utils.getMonthName
+import com.sukinsan.responsibility.utils.getWeekDayName
 import java.util.*
 
 fun createEveryHourWeekly(id: String, desc: String): TaskEntity {
@@ -100,34 +102,23 @@ class TaskEntity(
     }
 
     fun describeRulesHors(friendly: Boolean): String {
-        return rulesHours.joinToString(",")
+        return rulesHours.map { "${it}h" }.joinToString(",")
     }
 
     fun describeRulesWeekle(friendly: Boolean): String {
-        if (friendly) {
-            if (rulesWeek.size == 7) {
-                return "every day"
-            }
-        }
-        return rulesWeek.joinToString(",")
+        return rulesWeek
+            .map { getWeekDayName(it) }
+            .joinToString(",")
     }
 
     fun describeRulesDaily(friendly: Boolean): String {
-        if (friendly) {
-            if (rulesDays.size == 31) {
-                return "every day"
-            }
-        }
-        return rulesDays.joinToString(",")
+        return rulesDays.map { "${it}d" }.joinToString(",")
     }
 
     fun describeRulesMonthly(friendly: Boolean): String {
-        if (friendly) {
-            if (rulesMonths.size == 12) {
-                return "every month"
-            }
-        }
-        return rulesMonths.joinToString(",")
+        return rulesMonths
+            .map { getMonthName(it) }
+            .joinToString(",")
     }
 
     fun describeAllRules(friendly: Boolean): String {

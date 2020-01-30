@@ -133,11 +133,18 @@ class TaskEntityTest {
     @Test
     fun success_describe_all_rules() {
         assertEquals(
-            "every month",
+            """
+            Hours: 8h,9h,10h,11h,12h,13h,14h,15h,16h,17h,18h,19h,20h,21h,22h,23h
+            Week days: Mon,Tue,Wed,Thu,Fri,Sat,Sun
+            Month days: 1d,2d,7d,9d,12d,1d,15d,16d,17d,18d,19d,20d,21d,22d,23d,24d,25d
+            Months: Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec
+            """.trimIndent(),
             TaskEntity(
                 "", RemindRuleEnum.MONTHLY_DAYS,
                 listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
-                emptyList(), emptyList(), emptyList(), null,
+                listOf(1, 2, 3, 4, 5, 6, 7),
+                listOf(1, 2, 7, 9, 12, 1, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25),
+                listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), null,
                 "", null, mutableListOf(), mutableListOf()
             ).describeAllRules(true)
         )

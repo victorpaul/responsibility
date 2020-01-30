@@ -13,6 +13,37 @@ fun newTU(): TimeUtils {
     return TimeUtilsImpl(Calendar.getInstance())
 }
 
+fun getMonthName(number: Int): String { // todo test it
+    return when (number) {
+        1 -> "Jan"
+        2 -> "Feb"
+        3 -> "Mar"
+        4 -> "Apr"
+        5 -> "May"
+        6 -> "Jun"
+        7 -> "Jul"
+        8 -> "Aug"
+        9 -> "Sep"
+        10 -> "Oct"
+        11 -> "Nov"
+        12 -> "Dec"
+        else -> "error"
+    }
+}
+
+fun getWeekDayName(number: Int): String { // todo test it
+    return when (number) {
+        1 -> "Mon"
+        2 -> "Tue"
+        3 -> "Wed"
+        4 -> "Thu"
+        5 -> "Fri"
+        6 -> "Sat"
+        7 -> "Sun"
+        else -> "error"
+    }
+}
+
 interface TimeUtils {
 
     fun getCurrentHour(): Int
