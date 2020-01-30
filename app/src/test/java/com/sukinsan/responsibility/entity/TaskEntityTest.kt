@@ -18,7 +18,10 @@ class TaskEntityTest {
         Assert.assertEquals("task id", task.id)
         Assert.assertEquals("Drink water", task.description)
         Assert.assertEquals(RemindRuleEnum.WEEKLY_DAYS, task.remindRule)
-        Assert.assertEquals(listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23), task.rulesHours)
+        Assert.assertEquals(
+            listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+            task.rulesHours
+        )
         Assert.assertEquals(listOf(1, 2, 3, 4, 5, 6, 7), task.rulesWeek)
         Assert.assertEquals(0, task.rulesDays.size)
 
@@ -72,35 +75,138 @@ class TaskEntityTest {
     }
 
     @Test
-    fun sdfsf() {
+    fun success_describe_hours() {
 
-        TaskEntity(
-            "",
-            RemindRuleEnum.MONTHLY_DAYS,
-            listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
-            emptyList(),
-            emptyList(),
-            emptyList(),
-            null,
-            "", null, mutableListOf(), mutableListOf()
+        assertEquals(
+            "8-23",
+            TaskEntity(
+                "", RemindRuleEnum.MONTHLY_DAYS,
+                listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+                emptyList(), emptyList(), emptyList(), null,
+                "", null, mutableListOf(), mutableListOf()
+            ).describeRulesHors(false)
         )
+    }
 
-        fail(); // todo im here
-//        fun describeRulesHors(friendly: Boolean): String {
-//            return ""
-//        }
-//
-//        fun describeRulesWeekle(friendly: Boolean): String {
-//            return ""
-//        }
-//
-//        fun describeRulesDaily(friendly: Boolean): String {
-//            return ""
-//        }
-//
-//        fun describeRulesMonthly(friendly: Boolean): String {
-//            return ""
-//        }
+    @Test
+    fun success_describe_week() {
+
+        assertEquals(
+            "mon-sun",
+            TaskEntity(
+                "", RemindRuleEnum.MONTHLY_DAYS,
+                listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+                emptyList(), emptyList(), emptyList(), null,
+                "", null, mutableListOf(), mutableListOf()
+            ).describeRulesWeekle(false)
+        )
+    }
+
+    @Test
+    fun success_describe_days() {
+
+        assertEquals(
+            "1-31",
+            TaskEntity(
+                "", RemindRuleEnum.MONTHLY_DAYS,
+                listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+                emptyList(), emptyList(), emptyList(), null,
+                "", null, mutableListOf(), mutableListOf()
+            ).describeRulesDaily(false)
+        )
+    }
+
+    @Test
+    fun success_describe_months() {
+
+        assertEquals(
+            "1-12",
+            TaskEntity(
+                "", RemindRuleEnum.MONTHLY_DAYS,
+                listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+                emptyList(), emptyList(), emptyList(), null,
+                "", null, mutableListOf(), mutableListOf()
+            ).describeRulesMonthly(false)
+        )
+    }
+
+    @Test
+    fun success_describe_all_rules() {
+        assertEquals(
+            "every month",
+            TaskEntity(
+                "", RemindRuleEnum.MONTHLY_DAYS,
+                listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+                emptyList(), emptyList(), emptyList(), null,
+                "", null, mutableListOf(), mutableListOf()
+            ).describeAllRules(true)
+        )
+    }
+
+    @Test
+    fun success_describe_hours_friendly() {
+
+        assertEquals(
+            "All day long",
+            TaskEntity(
+                "", RemindRuleEnum.MONTHLY_DAYS,
+                listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+                emptyList(), emptyList(), emptyList(), null,
+                "", null, mutableListOf(), mutableListOf()
+            ).describeRulesHors(true)
+        )
+    }
+
+    @Test
+    fun success_describe_weekdays_friendly() {
+        assertEquals(
+            "every day",
+            TaskEntity(
+                "", RemindRuleEnum.MONTHLY_DAYS,
+                listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+                emptyList(), emptyList(), emptyList(), null,
+                "", null, mutableListOf(), mutableListOf()
+            ).describeRulesWeekle(true)
+        )
+    }
+
+    @Test
+    fun success_describe_monthdays_friendly() {
+        assertEquals(
+            "every day",
+            TaskEntity(
+                "", RemindRuleEnum.MONTHLY_DAYS,
+                listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+                emptyList(), emptyList(), emptyList(), null,
+                "", null, mutableListOf(), mutableListOf()
+            ).describeRulesDaily(true)
+        )
+    }
+
+    @Test
+    fun success_describe_months_friendly() {
+        assertEquals(
+            "every month",
+            TaskEntity(
+                "", RemindRuleEnum.MONTHLY_DAYS,
+                listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+                emptyList(), emptyList(), emptyList(), null,
+                "", null, mutableListOf(), mutableListOf()
+            ).describeRulesMonthly(true)
+        )
+    }
+
+    @Test
+    fun success_describe_all_rules_friendly() {
+        assertEquals(
+            "every month",
+            TaskEntity(
+                "", RemindRuleEnum.MONTHLY_DAYS,
+                listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+                emptyList(), emptyList(), emptyList(), null,
+                "", null, mutableListOf(), mutableListOf()
+            ).describeAllRules(true)
+        )
     }
 
 }

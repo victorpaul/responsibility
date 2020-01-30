@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="5dp">
 
     <View
         android:id="@+id/btn_expand"
@@ -27,6 +28,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Hours: 08,09,13,21\nDays:1,2,3,4,5,6,7"
+        android:textSize="10sp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_border"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/btn_expand"

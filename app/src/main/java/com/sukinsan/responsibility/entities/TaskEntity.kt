@@ -23,7 +23,39 @@ fun createEveryHourDaily(id: String, desc: String): TaskEntity { // todo test it
         RemindRuleEnum.MONTHLY_DAYS,
         listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
         emptyList(),
-        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31),
+        listOf(
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+        ),
         listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
         null,
         desc, null, mutableListOf(), mutableListOf()
@@ -68,19 +100,43 @@ class TaskEntity(
     }
 
     fun describeRulesHors(friendly: Boolean): String {
-        return ""
+        return rulesHours.joinToString(",")
     }
 
     fun describeRulesWeekle(friendly: Boolean): String {
-        return ""
+        if (friendly) {
+            if (rulesDays.size == 7) {
+                return "every day"
+            }
+        }
+        return rulesWeek.joinToString(",")
     }
 
     fun describeRulesDaily(friendly: Boolean): String {
-        return ""
+        if (friendly) {
+            if (rulesDays.size == 31) {
+                return "every day"
+            }
+        }
+        return rulesDays.joinToString(",")
     }
 
     fun describeRulesMonthly(friendly: Boolean): String {
-        return ""
+        if (friendly) {
+            if (rulesMonths.size == 12) {
+                return "every month"
+            }
+        }
+        return rulesMonths.joinToString(",")
+    }
+
+    fun describeAllRules(friendly: Boolean): String {
+        return """
+            Hours: ${describeRulesHors(friendly)}
+            Week days: ${describeRulesWeekle(friendly)}
+            Month days: ${describeRulesDaily(friendly)}
+            Months: ${describeRulesMonthly(friendly)}
+        """.trimIndent()
     }
 
     override fun equals(other: Any?): Boolean {

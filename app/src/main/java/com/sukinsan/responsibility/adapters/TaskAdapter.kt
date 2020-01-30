@@ -31,6 +31,7 @@ class TaskAdapter(var data: List<TaskContainerEntity>) :
                 true -> {
                     viewExpand.background.setLevel(1)
                     textRules.visibility = View.VISIBLE
+                    textRules.setText(container.task.describeAllRules(true))
                 }
                 else -> {
                     viewExpand.background.setLevel(0)
