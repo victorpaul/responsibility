@@ -105,7 +105,7 @@ class TaskEntity(
 
     fun describeRulesWeekle(friendly: Boolean): String {
         if (friendly) {
-            if (rulesDays.size == 7) {
+            if (rulesWeek.size == 7) {
                 return "every day"
             }
         }
