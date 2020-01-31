@@ -12,6 +12,8 @@ fun newLogicFlowService(): LogicFlowService {
 
 interface LogicFlowService {
 
+    fun getNextRemindMessage(task: TaskEntity, tu: TimeUtils): String
+
     fun isItOkToRemindNow(task: TaskEntity, tu: TimeUtils): FunFeedback
 
     fun remindUserAboutTask(
@@ -23,6 +25,14 @@ interface LogicFlowService {
 }
 
 class LogicFlowServiceImpl : LogicFlowService {
+
+    override fun getNextRemindMessage(task: TaskEntity, tu: TimeUtils): String {
+        val hourMessage = task.describeNextReminding(tu.getCurrentHour())
+        if (hourMessage != null) {
+            return hourMessage
+        }
+        return "error"
+    }
 
     override fun isItOkToRemindNow(task: TaskEntity, tu: TimeUtils): FunFeedback {
         if (!task.rulesHours.contains(tu.getCurrentHour())) {
@@ -74,7 +84,8 @@ class LogicFlowServiceImpl : LogicFlowService {
 
         task.notifiedAt.add(tu.getDate())
         db.save(task)
-        val times = task.notifiedAt.sortedByDescending { it.time }.map { tu.friendlyTime(it) }.joinToString(", ")
+        val times = task.notifiedAt.sortedByDescending { it.time }.map { tu.friendlyTime(it) }
+            .joinToString(", ")
 
         ns.showNotification(
             tu.friendlyDate(),
@@ -82,7 +93,8 @@ class LogicFlowServiceImpl : LogicFlowService {
             task.getNotoficationId(),
             arrayOf(
                 "${task.description}",
-                "Was reminded on: ${times}",
+                "next ${getNextRemindMessage(task,tu)}",
+                "prev ${times}",
                 null
             ).filterNotNull().joinToString(".\n")
         )

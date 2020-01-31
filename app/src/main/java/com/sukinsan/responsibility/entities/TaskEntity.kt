@@ -130,6 +130,27 @@ class TaskEntity(
         """.trimIndent()
     }
 
+    fun describeNextReminding(currentHour: Int): String? { //todo tets it
+        val r = rulesHours.find {
+            it > currentHour
+        }
+        if (r != null) {
+            return "in ~${(r - currentHour)} hours"
+        }
+
+        return null
+    }
+
+    fun describeNextWeekDay(currentday: Int): String? { //todo tets it
+
+        return null
+    }
+
+    fun describeNextMonthDay(currentday: Int): String? { //todo tets it
+
+        return null
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
