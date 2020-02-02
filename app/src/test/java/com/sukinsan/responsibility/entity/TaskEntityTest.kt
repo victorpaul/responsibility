@@ -216,4 +216,18 @@ class TaskEntityTest {
         )
     }
 
+    @Test
+    fun success() {
+
+        assertEquals("in an hour", null)
+        assertEquals("in two hours", null)
+        assertEquals("in three hours", null)
+        assertEquals("in 4 hours", null)
+        assertEquals("tomorrow", null)
+        assertEquals("tomorrow", null)
+        assertEquals("after tomorrow", null)
+        assertEquals("in two days", null)
+        assertEquals("next month", null)
+    }
+
 }

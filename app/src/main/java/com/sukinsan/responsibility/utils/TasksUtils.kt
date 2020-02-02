@@ -1,22 +1,21 @@
-package com.sukinsan.responsibility.services
+package com.sukinsan.responsibility.utils
 
 import com.sukinsan.responsibility.entities.FunFeedback
-import com.sukinsan.responsibility.utils.DBUtils
 import com.sukinsan.responsibility.entities.TaskEntity
 import com.sukinsan.responsibility.enums.RemindRuleEnum
-import com.sukinsan.responsibility.utils.TimeUtils
+import com.sukinsan.responsibility.services.NotificationService
 
-fun newLogicFlowService(): LogicFlowService {
-    return LogicFlowServiceImpl()
+fun newTaskUtils(): TasksUtils {
+    return TasksUtilsImpl()
 }
 
-interface LogicFlowService {
+interface TasksUtils {
 
-    fun getNextRemindMessage(task: TaskEntity, tu: TimeUtils): String
+    fun describeNextReminding(task: TaskEntity, tu: TimeUtils): String
 
     fun isItOkToRemindNow(task: TaskEntity, tu: TimeUtils): FunFeedback
 
-    fun remindUserAboutTask(
+    fun remind(
         task: TaskEntity,
         storage: DBUtils,
         tu: TimeUtils,
@@ -24,10 +23,10 @@ interface LogicFlowService {
     ): FunFeedback
 }
 
-class LogicFlowServiceImpl : LogicFlowService {
+class TasksUtilsImpl : TasksUtils {
 
-    override fun getNextRemindMessage(task: TaskEntity, tu: TimeUtils): String {
-        val hourMessage = task.describeNextReminding(tu.getCurrentHour())
+    override fun describeNextReminding(task: TaskEntity, tu: TimeUtils): String {
+        val hourMessage = task.describeNextHor(tu.getCurrentHour())
         if (hourMessage != null) {
             return hourMessage
         }
@@ -35,16 +34,17 @@ class LogicFlowServiceImpl : LogicFlowService {
     }
 
     override fun isItOkToRemindNow(task: TaskEntity, tu: TimeUtils): FunFeedback {
-        if (!task.rulesHours.contains(tu.getCurrentHour())) {
-            return FunFeedback(
-                false,
-                "Hourly rules are not met for date ${tu.friendlyDateTimeYear()}"
-            )
-        }
         if (!task.rulesMonths.contains(tu.getCurrentMonth())) {
             return FunFeedback(
                 false,
                 "Monthly rules are not met for date ${tu.friendlyDateTimeYear()}"
+            )
+        }
+
+        if (!task.rulesHours.contains(tu.getCurrentHour())) {
+            return FunFeedback(
+                false,
+                "Hourly rules are not met for date ${tu.friendlyDateTimeYear()}"
             )
         }
 
@@ -70,7 +70,7 @@ class LogicFlowServiceImpl : LogicFlowService {
         return FunFeedback(true, "Remind rules are met for date ${tu.friendlyDateTime()}")
     }
 
-    override fun remindUserAboutTask(
+    override fun remind(
         task: TaskEntity,
         db: DBUtils,
         tu: TimeUtils,
@@ -88,12 +88,12 @@ class LogicFlowServiceImpl : LogicFlowService {
             .joinToString(", ")
 
         ns.showNotification(
-            tu.friendlyDate(),
+            tu.friendlyTime(),
             task.description,
             task.getNotoficationId(),
             arrayOf(
-                "${task.description}",
-                "next ${getNextRemindMessage(task,tu)}",
+                task.description,
+                "next ${describeNextReminding(task, tu)}",
                 "prev ${times}",
                 null
             ).filterNotNull().joinToString(".\n")

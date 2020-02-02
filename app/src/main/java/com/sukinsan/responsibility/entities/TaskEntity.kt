@@ -121,16 +121,7 @@ class TaskEntity(
             .joinToString(",")
     }
 
-    fun describeAllRules(friendly: Boolean): String {
-        return """
-            Hours: ${describeRulesHors(friendly)}
-            Week days: ${describeRulesWeekle(friendly)}
-            Month days: ${describeRulesDaily(friendly)}
-            Months: ${describeRulesMonthly(friendly)}
-        """.trimIndent()
-    }
-
-    fun describeNextReminding(currentHour: Int): String? { //todo tets it
+    fun describeNextHor(currentHour: Int): String? { //todo tets it
         val r = rulesHours.find {
             it > currentHour
         }

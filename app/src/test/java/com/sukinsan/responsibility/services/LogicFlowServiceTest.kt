@@ -3,6 +3,7 @@ package com.sukinsan.responsibility.services
 import com.sukinsan.responsibility.entities.TaskEntity
 import com.sukinsan.responsibility.entities.createEveryHourWeekly
 import com.sukinsan.responsibility.enums.RemindRuleEnum
+import com.sukinsan.responsibility.utils.newTaskUtils
 import com.sukinsan.responsibility.utils.newTU
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -17,8 +18,8 @@ class LogicFlowServiceTest {
             for (days in 0..31) {
                 for (hour in 8..23) {
                     val tu = newTU(2020, month, days, hour, 25, 0)
-                    assertEquals(true, newLogicFlowService().isItOkToRemindNow(weeklyTask, tu).success)
-                    assertEquals(true, newLogicFlowService().isItOkToRemindNow(dailyTask, tu).success)
+                    assertEquals(true, newTaskUtils().isItOkToRemindNow(weeklyTask, tu).success)
+                    assertEquals(true, newTaskUtils().isItOkToRemindNow(dailyTask, tu).success)
                 }
             }
         }
@@ -38,12 +39,12 @@ class LogicFlowServiceTest {
         )
         newTU(2020, 0, 26, 9, 25, 0).apply {
             assertEquals("2020 Jan 26, 09:25", this.friendlyDateTimeYear())
-            assertEquals(true, newLogicFlowService().isItOkToRemindNow(task, this).success)
+            assertEquals(true, newTaskUtils().isItOkToRemindNow(task, this).success)
         }
 
         assertEquals(
             "Day of week rules are not met for date 2020 Jan 27, 09:25",
-            newLogicFlowService().isItOkToRemindNow(
+            newTaskUtils().isItOkToRemindNow(
                 task,
                 newTU(2020, 0, 27, 9, 25, 0)
             ).message
@@ -64,12 +65,12 @@ class LogicFlowServiceTest {
         )
         newTU(2020, 0, 26, 9, 25, 0).apply {
             assertEquals("2020 Jan 26, 09:25", this.friendlyDateTimeYear())
-            assertEquals(true, newLogicFlowService().isItOkToRemindNow(task, this).success)
+            assertEquals(true, newTaskUtils().isItOkToRemindNow(task, this).success)
         }
 
         assertEquals(
             "Day of month rules are not met for date 2020 Jan 27, 09:25",
-            newLogicFlowService().isItOkToRemindNow(
+            newTaskUtils().isItOkToRemindNow(
                 task,
                 newTU(2020, 0, 27, 9, 25, 0)
             ).message
@@ -91,7 +92,7 @@ class LogicFlowServiceTest {
 
         assertEquals(
             "Monthly rules are not met for date 2020 Feb 2, 09:25",
-            newLogicFlowService().isItOkToRemindNow(
+            newTaskUtils().isItOkToRemindNow(
                 task,
                 newTU(2020, 1, 2, 9, 25, 0)
             ).message
@@ -113,7 +114,7 @@ class LogicFlowServiceTest {
 
         assertEquals(
             "Hourly rules are not met for date 2020 Jan 26, 10:25",
-            newLogicFlowService().isItOkToRemindNow(
+            newTaskUtils().isItOkToRemindNow(
                 task,
                 newTU(2020, 0, 26, 10, 25, 0)
             ).message
