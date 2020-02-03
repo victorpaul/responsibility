@@ -11,9 +11,8 @@ fun newTaskUtils(): TasksUtils {
 
 interface TasksUtils {
 
-    fun describeNextReminding(task: TaskEntity, tu: TimeUtils): String
 
-    fun isItOkToRemindNow(task: TaskEntity, tu: TimeUtils): FunFeedback
+    fun doesTimeMuch(task: TaskEntity, tu: TimeUtils): Boolean
 
     fun remind(
         task: TaskEntity,
@@ -25,29 +24,27 @@ interface TasksUtils {
 
 class TasksUtilsImpl : TasksUtils {
 
-    override fun describeNextReminding(task: TaskEntity, tu: TimeUtils): String {
-        val hourMessage = task.describeNextHor(tu.getCurrentHour())
-        if (hourMessage != null) {
-            return hourMessage
-        }
-        return "error"
-    }
-
-    override fun isItOkToRemindNow(task: TaskEntity, tu: TimeUtils): FunFeedback {
-        if (!task.rulesMonths.contains(tu.getCurrentMonth())) {
-            return FunFeedback(
-                false,
-                "Monthly rules are not met for date ${tu.friendlyDateTimeYear()}"
-            )
-        }
-
+    private fun doesHourMuch(task: TaskEntity, tu: TimeUtils): FunFeedback {
         if (!task.rulesHours.contains(tu.getCurrentHour())) {
             return FunFeedback(
                 false,
                 "Hourly rules are not met for date ${tu.friendlyDateTimeYear()}"
             )
         }
+        return FunFeedback(true, "Hourly rules are met for date ${tu.friendlyDateTime()}")
+    }
 
+    private fun doesMonthMuch(task: TaskEntity, tu: TimeUtils): FunFeedback {
+        if (!task.rulesMonths.contains(tu.getCurrentMonth())) {
+            return FunFeedback(
+                false,
+                "Monthly rules are not met for date ${tu.friendlyDateTimeYear()}"
+            )
+        }
+        return FunFeedback(true, "Remind rules are met for date ${tu.friendlyDateTime()}")
+    }
+
+    private fun doesDayMuch(task: TaskEntity, tu: TimeUtils): FunFeedback {
         when (task.remindRule) {
             RemindRuleEnum.WEEKLY_DAYS ->
                 if (!task.rulesWeek.contains(tu.getCurrentWeekDay())) {
@@ -64,10 +61,16 @@ class TasksUtilsImpl : TasksUtils {
                     )
                 }
             else -> {
+                return FunFeedback(false, "Unknown task remind ruls for date ${tu.friendlyDateTime()}")
             }
         }
+        return FunFeedback(true, "Daily rules are met for date ${tu.friendlyDateTime()}")
+    }
 
-        return FunFeedback(true, "Remind rules are met for date ${tu.friendlyDateTime()}")
+    override fun doesTimeMuch(task: TaskEntity, tu: TimeUtils): Boolean { // todo test
+        return doesMonthMuch(task, tu).success &&
+                doesHourMuch(task, tu).success &&
+                doesDayMuch(task, tu).success
     }
 
     override fun remind(
@@ -77,9 +80,8 @@ class TasksUtilsImpl : TasksUtils {
         ns: NotificationService
     ): FunFeedback {
 
-        val rulesCheck = isItOkToRemindNow(task, tu)
-        if (!rulesCheck.success) {
-            return rulesCheck
+        if (!doesTimeMuch(task, tu)) {
+            return FunFeedback(false, "Time rules were not met")
         }
 
         task.notifiedAt.add(tu.getDate())
@@ -93,7 +95,6 @@ class TasksUtilsImpl : TasksUtils {
             task.getNotoficationId(),
             arrayOf(
                 task.description,
-                "next ${describeNextReminding(task, tu)}",
                 "prev ${times}",
                 null
             ).filterNotNull().joinToString(".\n")
