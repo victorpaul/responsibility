@@ -15,27 +15,27 @@ class TaskAdapter(var data: List<TaskContainerEntity>) :
         val textDescription = itemView.findViewById<TextView>(R.id.txt_description)
         val textRules = itemView.findViewById<TextView>(R.id.txt_rules)
         val viewExpand = itemView.findViewById<View>(R.id.btn_expand)
+        val layoutEditmode = itemView.findViewById<View>(R.id.layout_edit_mode)
 
         fun set(container: TaskContainerEntity) {
             updateView(container)
             itemRoot.setOnClickListener({
-                container.expanded = !container.expanded
+                container.editMode = !container.editMode
                 updateView(container)
             })
         }
 
         fun updateView(container: TaskContainerEntity) {
             textDescription.setText(container.task.description)
-
-            when (container.expanded) {
+            textRules.setText(container.task.describeAllRules(true))
+            when (container.editMode) {
                 true -> {
                     viewExpand.background.setLevel(1)
-                    textRules.visibility = View.VISIBLE
-                    textRules.setText(container.task.describeAllRules(true))
+                    layoutEditmode.visibility = View.VISIBLE
                 }
                 else -> {
                     viewExpand.background.setLevel(0)
-                    textRules.visibility = View.GONE
+                    layoutEditmode.visibility = View.GONE
                 }
             }
 

@@ -26,37 +26,8 @@ fun createEveryHourDaily(id: String, desc: String): TaskEntity { // todo test it
         listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
         emptyList(),
         listOf(
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21,
-            22,
-            23,
-            24,
-            25,
-            26,
-            27,
-            28,
-            29,
-            30,
-            31
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+            17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
         ),
         listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
         null,
@@ -121,11 +92,14 @@ class TaskEntity(
             .joinToString(",")
     }
 
-    fun describeAllRules(friendly: Boolean): String {
+    fun describeAllRules(friendly: Boolean): String { // todo test it
+        val dayRules = when (this.remindRule) {
+            RemindRuleEnum.WEEKLY_DAYS -> "Week: ${describeRulesWeekle(friendly)}"
+            RemindRuleEnum.MONTHLY_DAYS -> "Days: ${describeRulesDaily(friendly)}"
+        }
         return """
             Hours: ${describeRulesHors(friendly)}
-            Week: ${describeRulesWeekle(friendly)}
-            Days: ${describeRulesDaily(friendly)}
+            ${dayRules}
             Months: ${describeRulesMonthly(friendly)}
         """.trimIndent()
     }

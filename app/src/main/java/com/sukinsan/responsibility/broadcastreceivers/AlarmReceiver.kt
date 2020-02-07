@@ -18,7 +18,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val notfService = newNotificationService(context)
 
         val tasks = dbProvider.read().getTasksList()
-        val tasksInterval = 10 / tasks.size
+        val tasksInterval = 30 / tasks.size
 
         notfService.registerChannel()
         tasks.forEachIndexed { index, taskEntity ->

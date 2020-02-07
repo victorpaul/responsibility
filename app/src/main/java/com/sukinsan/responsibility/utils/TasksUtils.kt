@@ -61,7 +61,10 @@ class TasksUtilsImpl : TasksUtils {
                     )
                 }
             else -> {
-                return FunFeedback(false, "Unknown task remind ruls for date ${tu.friendlyDateTime()}")
+                return FunFeedback(
+                    false,
+                    "Unknown task remind ruls for date ${tu.friendlyDateTime()}"
+                )
             }
         }
         return FunFeedback(true, "Daily rules are met for date ${tu.friendlyDateTime()}")
@@ -73,7 +76,7 @@ class TasksUtilsImpl : TasksUtils {
                 doesDayMuch(task, tu).success
     }
 
-    override fun remind(
+    override fun remind( // todo test it
         task: TaskEntity,
         db: DBUtils,
         tu: TimeUtils,
@@ -84,10 +87,18 @@ class TasksUtilsImpl : TasksUtils {
             return FunFeedback(false, "Time rules were not met")
         }
 
+
+        val cutTo = if (task.notifiedAt.size < 5) {
+            task.notifiedAt.size
+        } else {
+            5
+        }
+        val times = task.notifiedAt.sortedByDescending { it.time }
+            .map { tu.friendlyTime(it) }
+            .subList(0, cutTo)
+            .joinToString(", ")
         task.notifiedAt.add(tu.getDate())
         db.save(task)
-        val times = task.notifiedAt.sortedByDescending { it.time }.map { tu.friendlyTime(it) }
-            .joinToString(", ")
 
         ns.showNotification(
             tu.friendlyTime(),

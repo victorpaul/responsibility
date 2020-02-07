@@ -46,7 +46,7 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.text.observe(this, Observer {
-//            textView.text = it
+            //            textView.text = it
         })
         return root
     }
