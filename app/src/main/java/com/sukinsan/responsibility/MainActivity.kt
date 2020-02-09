@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         val task = TaskEntity(
             "task id",
             RemindRuleEnum.WEEKLY_DAYS,
-            listOf(8, 10, 12, 14, 16, 17, 20, 22),
+            listOf(8, 10, 12, 14, 16, 17, 20, 22,23),
             listOf(1, 2, 3, 4, 5, 6, 7),
             emptyList(),
             listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         val task3 = TaskEntity(
             "task id3",
             RemindRuleEnum.WEEKLY_DAYS,
-            listOf(10, 12, 15, 17, 19, 21, 23),
+            listOf(10, 12, 15, 17, 19),
             listOf(1, 2, 3, 4, 5, 6, 7),
             emptyList(),
             listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         val task5 = TaskEntity(
             "task id5",
             RemindRuleEnum.WEEKLY_DAYS,
-            listOf(8, 10, 12, 14, 16, 17, 20, 22),
+            listOf( 11, 12, 13, 15, 17, 20, 21),
             listOf(1, 2, 3, 4, 5, 6, 7),
             listOf(
                 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
@@ -77,10 +77,25 @@ class MainActivity : AppCompatActivity() {
             "Age is just a number", null, mutableListOf(), mutableListOf()
         )
 
+        val task6 = TaskEntity(
+            "task id6",
+            RemindRuleEnum.WEEKLY_DAYS,
+            listOf( 20, 21, 22, 23),
+            listOf(1, 2, 3, 4, 5, 6, 7),
+            listOf(
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+                17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
+            ),
+            emptyList(),
+            null,
+            "No food after 21h", null, mutableListOf(), mutableListOf()
+        )
+
         storageUt.write {
             it.save(task)
             it.save(task3)
             it.save(task5)
+            it.save(task6)
             return@write true
         }
 
