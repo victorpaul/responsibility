@@ -48,6 +48,8 @@ interface TimeUtils {
 
     fun getCurrentHour(): Int
 
+    fun getAlarmRunTimeAt(elapsedRealtime: Long, minuteToRunAt: Int): Long
+
     fun getCurrentMonthDay(): Int
 
     fun getCurrentWeekDay(): Int
@@ -77,14 +79,49 @@ class TimeUtilsImpl(val calendar: Calendar) : TimeUtils {
     val PATTERN_FRIENDLY_DATE_TIME_YEAR = "yyyy MMM d, HH:mm"
     val PATTERN_ISO8601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
 
-    val dfISO8601: SimpleDateFormat by lazy { SimpleDateFormat(PATTERN_ISO8601, Locale.getDefault()) }
-    val dfDateTime: SimpleDateFormat by lazy { SimpleDateFormat(PATTERN_FRIENDLY_DATE_TIME, Locale.getDefault()) }
-    val dfDateTimeYear: SimpleDateFormat by lazy { SimpleDateFormat(PATTERN_FRIENDLY_DATE_TIME_YEAR, Locale.getDefault()) }
-    val dfDate: SimpleDateFormat by lazy { SimpleDateFormat(PATTERN_FRIENDLY_DATE, Locale.getDefault()) }
-    val dfTime: SimpleDateFormat by lazy { SimpleDateFormat(PATTERN_FRIENDLY_TIME, Locale.getDefault()) }
+    val dfISO8601: SimpleDateFormat by lazy {
+        SimpleDateFormat(
+            PATTERN_ISO8601,
+            Locale.getDefault()
+        )
+    }
+    val dfDateTime: SimpleDateFormat by lazy {
+        SimpleDateFormat(
+            PATTERN_FRIENDLY_DATE_TIME,
+            Locale.getDefault()
+        )
+    }
+    val dfDateTimeYear: SimpleDateFormat by lazy {
+        SimpleDateFormat(
+            PATTERN_FRIENDLY_DATE_TIME_YEAR,
+            Locale.getDefault()
+        )
+    }
+    val dfDate: SimpleDateFormat by lazy {
+        SimpleDateFormat(
+            PATTERN_FRIENDLY_DATE,
+            Locale.getDefault()
+        )
+    }
+    val dfTime: SimpleDateFormat by lazy {
+        SimpleDateFormat(
+            PATTERN_FRIENDLY_TIME,
+            Locale.getDefault()
+        )
+    }
 
     override fun getCurrentHour(): Int {
         return calendar.get(Calendar.HOUR_OF_DAY)
+    }
+
+    override fun getAlarmRunTimeAt(elapsedRealtime: Long, minuteToRunAt: Int): Long {
+        val minute = calendar.get(Calendar.MINUTE)
+
+        if (minuteToRunAt < minute) {
+            return elapsedRealtime + (60 - (minute - minuteToRunAt)) * 60 * 1000
+        }
+
+        return elapsedRealtime + (minuteToRunAt - minute) * 60 * 1000
     }
 
     override fun getCurrentMonthDay(): Int {

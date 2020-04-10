@@ -154,4 +154,15 @@ class TimeUtilsTest {
             assertEquals(12, getCurrentMonth())
         }
     }
+
+    @Test
+    fun success_calculate_delayed_alarm_time() {
+        newTU(2020, 0, 27, 11, 30, 0).apply {
+
+            assertEquals(20 * 60 * 1000 + 668, getAlarmRunTimeAt(668, 50))
+            assertEquals(40 * 60 * 1000 + 668, getAlarmRunTimeAt(668, 10))
+            assertEquals(668, getAlarmRunTimeAt(668, 30))
+
+        }
+    }
 }

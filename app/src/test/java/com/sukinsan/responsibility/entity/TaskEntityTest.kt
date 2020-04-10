@@ -49,7 +49,7 @@ class TaskEntityTest {
                 listOf(1, 2, 3, 4, 5, 6, 7),
                 emptyList(),
                 listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-                null, "Drink water", null, mutableListOf(), mutableListOf()
+                null, "Drink water", null, mutableListOf()
             ), task
         )
     }
@@ -83,7 +83,7 @@ class TaskEntityTest {
                 "", RemindRuleEnum.MONTHLY_DAYS,
                 listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
                 emptyList(), emptyList(), emptyList(), null,
-                "", null, mutableListOf(), mutableListOf()
+                "", null, mutableListOf()
             ).describeRulesHors(false)
         )
     }
@@ -97,7 +97,7 @@ class TaskEntityTest {
                 "", RemindRuleEnum.MONTHLY_DAYS,
                 listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
                 emptyList(), emptyList(), emptyList(), null,
-                "", null, mutableListOf(), mutableListOf()
+                "", null, mutableListOf()
             ).describeRulesWeekle(false)
         )
     }
@@ -111,7 +111,7 @@ class TaskEntityTest {
                 "", RemindRuleEnum.MONTHLY_DAYS,
                 listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
                 emptyList(), emptyList(), emptyList(), null,
-                "", null, mutableListOf(), mutableListOf()
+                "", null, mutableListOf()
             ).describeRulesDaily(false)
         )
     }
@@ -125,7 +125,7 @@ class TaskEntityTest {
                 "", RemindRuleEnum.MONTHLY_DAYS,
                 listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
                 emptyList(), emptyList(), emptyList(), null,
-                "", null, mutableListOf(), mutableListOf()
+                "", null, mutableListOf()
             ).describeRulesMonthly(false)
         )
     }
@@ -145,7 +145,7 @@ class TaskEntityTest {
                 listOf(1, 2, 3, 4, 5, 6, 7),
                 listOf(1, 2, 7, 9, 12, 1, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25),
                 listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), null,
-                "", null, mutableListOf(), mutableListOf()
+                "", null, mutableListOf()
             ).describeAllRules(true)
         )
     }
@@ -159,7 +159,7 @@ class TaskEntityTest {
                 "", RemindRuleEnum.MONTHLY_DAYS,
                 listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
                 emptyList(), emptyList(), emptyList(), null,
-                "", null, mutableListOf(), mutableListOf()
+                "", null, mutableListOf()
             ).describeRulesHors(true)
         )
     }
@@ -172,7 +172,7 @@ class TaskEntityTest {
                 "", RemindRuleEnum.MONTHLY_DAYS,
                 listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
                 emptyList(), emptyList(), emptyList(), null,
-                "", null, mutableListOf(), mutableListOf()
+                "", null, mutableListOf()
             ).describeRulesWeekle(true)
         )
     }
@@ -185,7 +185,7 @@ class TaskEntityTest {
                 "", RemindRuleEnum.MONTHLY_DAYS,
                 listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
                 emptyList(), emptyList(), emptyList(), null,
-                "", null, mutableListOf(), mutableListOf()
+                "", null, mutableListOf()
             ).describeRulesDaily(true)
         )
     }
@@ -198,7 +198,7 @@ class TaskEntityTest {
                 "", RemindRuleEnum.MONTHLY_DAYS,
                 listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
                 emptyList(), emptyList(), emptyList(), null,
-                "", null, mutableListOf(), mutableListOf()
+                "", null, mutableListOf()
             ).describeRulesMonthly(true)
         )
     }
@@ -211,7 +211,7 @@ class TaskEntityTest {
                 "", RemindRuleEnum.MONTHLY_DAYS,
                 listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
                 emptyList(), emptyList(), emptyList(), null,
-                "", null, mutableListOf(), mutableListOf()
+                "", null, mutableListOf()
             ).describeAllRules(true)
         )
     }

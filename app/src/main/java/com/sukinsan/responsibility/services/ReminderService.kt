@@ -4,7 +4,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.SystemClock
 import androidx.work.*
 import com.sukinsan.responsibility.broadcastreceivers.AlarmReceiver
 import com.sukinsan.responsibility.entities.TaskEntity
@@ -20,7 +19,10 @@ interface ReminderService {
 
     fun getWorkManager(): WorkManager
 
-    fun createPeriodicWorkRequestBuilder(repeatInterval: Long, repeatIntervalTimeUnit: TimeUnit): PeriodicWorkRequest.Builder
+    fun createPeriodicWorkRequestBuilder(
+        repeatInterval: Long,
+        repeatIntervalTimeUnit: TimeUnit
+    ): PeriodicWorkRequest.Builder
 
     fun createOneOffWorkRequestBuilder(): OneTimeWorkRequest.Builder
 
@@ -28,7 +30,7 @@ interface ReminderService {
 
     fun runOneTimeWorker(task: TaskEntity, delayMinutes: Long): Operation
 
-    fun runRecurringAlarm(): Boolean
+    fun runRecurringAlarm(runDelay: Long): Boolean
 
 }
 
@@ -38,7 +40,10 @@ class ReminderServiceImpl(val ctx: Context, val dbProvider: DBProvider) : Remind
         return WorkManager.getInstance(ctx)
     }
 
-    override fun createPeriodicWorkRequestBuilder(repeatInterval: Long, repeatIntervalTimeUnit: TimeUnit): PeriodicWorkRequest.Builder {
+    override fun createPeriodicWorkRequestBuilder(
+        repeatInterval: Long,
+        repeatIntervalTimeUnit: TimeUnit
+    ): PeriodicWorkRequest.Builder {
         return PeriodicWorkRequestBuilder<ReminderWorker>(repeatInterval, repeatIntervalTimeUnit)
     }
 
@@ -57,10 +62,17 @@ class ReminderServiceImpl(val ctx: Context, val dbProvider: DBProvider) : Remind
             return@write true
         }
 
-        return getWorkManager().enqueueUniquePeriodicWork(task.id, ExistingPeriodicWorkPolicy.REPLACE, cronJob)
+        return getWorkManager().enqueueUniquePeriodicWork(
+            task.id,
+            ExistingPeriodicWorkPolicy.REPLACE,
+            cronJob
+        )
     }
 
-    override fun runOneTimeWorker(task: TaskEntity, delayMinutes: Long): Operation { // todo, test it
+    override fun runOneTimeWorker(
+        task: TaskEntity,
+        delayMinutes: Long
+    ): Operation { // todo, test it
         val cronJob = createOneOffWorkRequestBuilder()
             .setInputData(workDataOf(Pair("taskId", task.id)))
             .setInitialDelay(delayMinutes, TimeUnit.MINUTES)
@@ -79,7 +91,7 @@ class ReminderServiceImpl(val ctx: Context, val dbProvider: DBProvider) : Remind
         )
     }
 
-    override fun runRecurringAlarm(): Boolean {
+    override fun runRecurringAlarm(runDelay: Long): Boolean {
         val alarmMgr = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmIntent = Intent(ctx, AlarmReceiver::class.java).let { intent ->
             PendingIntent.getBroadcast(ctx, 0, intent, 0)
@@ -87,7 +99,7 @@ class ReminderServiceImpl(val ctx: Context, val dbProvider: DBProvider) : Remind
 
         alarmMgr?.setInexactRepeating(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            SystemClock.elapsedRealtime(),
+            runDelay,
             AlarmManager.INTERVAL_HOUR,
             alarmIntent
         )

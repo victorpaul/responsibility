@@ -15,7 +15,7 @@ fun createEveryHourWeekly(id: String, desc: String): TaskEntity {
         emptyList(),
         listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
         null,
-        desc, null, mutableListOf(), mutableListOf()
+        desc, null, mutableListOf()
     )
 }
 
@@ -31,7 +31,7 @@ fun createEveryHourDaily(id: String, desc: String): TaskEntity { // todo test it
         ),
         listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
         null,
-        desc, null, mutableListOf(), mutableListOf()
+        desc, null, mutableListOf()
     )
 }
 
@@ -54,8 +54,6 @@ class TaskEntity(
     val description: String,
     @Expose
     var workerManagerId: String?,
-    @Expose
-    val notifiedAt: MutableList<Date>,
     @Expose
     val tags: MutableList<String>
 ) {
@@ -120,7 +118,6 @@ class TaskEntity(
         if (rulesExactDate != other.rulesExactDate) return false
         if (description != other.description) return false
         if (workerManagerId != other.workerManagerId) return false
-        if (notifiedAt != other.notifiedAt) return false
         if (tags != other.tags) return false
 
         return true
@@ -136,13 +133,12 @@ class TaskEntity(
         result = 31 * result + (rulesExactDate?.hashCode() ?: 0)
         result = 31 * result + description.hashCode()
         result = 31 * result + (workerManagerId?.hashCode() ?: 0)
-        result = 31 * result + notifiedAt.hashCode()
         result = 31 * result + tags.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "TaskEntity(id='$id', remindRule=$remindRule, rulesHours=$rulesHours, rulesWeek=$rulesWeek, rulesDays=$rulesDays, rulesMonths=$rulesMonths, rulesExactDate=$rulesExactDate, description='$description', workerManagerId=$workerManagerId, notifiedAt=$notifiedAt, tags=$tags)"
+        return "TaskEntity(id='$id', remindRule=$remindRule, rulesHours=$rulesHours, rulesWeek=$rulesWeek, rulesDays=$rulesDays, rulesMonths=$rulesMonths, rulesExactDate=$rulesExactDate, description='$description', workerManagerId=$workerManagerId, tags=$tags)"
     }
 
 

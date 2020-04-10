@@ -12,7 +12,7 @@ fun newTaskUtils(): TasksUtils {
 interface TasksUtils {
 
 
-    fun doesTimeMuch(task: TaskEntity, tu: TimeUtils): Boolean
+    fun doesTimeMuch(task: TaskEntity, tu: TimeUtils): FunFeedback
 
     fun remind(
         task: TaskEntity,
@@ -70,10 +70,12 @@ class TasksUtilsImpl : TasksUtils {
         return FunFeedback(true, "Daily rules are met for date ${tu.friendlyDateTime()}")
     }
 
-    override fun doesTimeMuch(task: TaskEntity, tu: TimeUtils): Boolean { // todo test
-        return doesMonthMuch(task, tu).success &&
+    override fun doesTimeMuch(task: TaskEntity, tu: TimeUtils): FunFeedback { // todo test
+        val succ = doesMonthMuch(task, tu).success &&
                 doesHourMuch(task, tu).success &&
                 doesDayMuch(task, tu).success
+        return FunFeedback(succ, "")
+
     }
 
     override fun remind( // todo test it
@@ -83,32 +85,15 @@ class TasksUtilsImpl : TasksUtils {
         ns: NotificationService
     ): FunFeedback {
 
-        if (!doesTimeMuch(task, tu)) {
+        if (!doesTimeMuch(task, tu).success) {
             return FunFeedback(false, "Time rules were not met")
         }
-
-
-        val cutTo = if (task.notifiedAt.size < 5) {
-            task.notifiedAt.size
-        } else {
-            5
-        }
-        val times = task.notifiedAt.sortedByDescending { it.time }
-            .map { tu.friendlyTime(it) }
-            .subList(0, cutTo)
-            .joinToString(", ")
-        task.notifiedAt.add(tu.getDate())
-        db.save(task)
 
         ns.showNotification(
             tu.friendlyTime(),
             task.description,
             task.getNotoficationId(),
-            arrayOf(
-                task.description,
-                "prev ${times}",
-                null
-            ).filterNotNull().joinToString(".\n")
+            task.description
         )
 
         return FunFeedback(true, "Task notified")
